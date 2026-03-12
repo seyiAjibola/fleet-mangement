@@ -53,7 +53,7 @@ class Edit extends Component
             'pickup_location' => ['required', 'string', 'max:255'],
             'dropoff_location' => ['required', 'string', 'max:255'],
             'pickup_time' => ['required', 'date'],
-            'dropoff_time' => ['nullable', 'date', 'after_or_equal:pickup_time'],
+            'dropoff_time' => ['required', 'date', 'after_or_equal:pickup_time'],
             'vehicle_category' => ['required', 'string', 'max:255'],
             'booking_source' => ['required', 'string', 'max:255'],
             'assigned_vehicle' => ['nullable', 'integer', 'exists:vehicles,vehicle_id'],

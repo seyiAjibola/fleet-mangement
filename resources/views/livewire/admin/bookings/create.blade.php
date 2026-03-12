@@ -33,8 +33,9 @@
         </div>
 
         <div class="form-row">
-            <label for="dropoff_time">Dropoff Time (optional)</label>
+            <label for="dropoff_time">Dropoff Time</label>
             <input id="dropoff_time" type="datetime-local" wire:model.defer="dropoff_time" />
+            <small>Auto-fills to pickup time + 2 hours. Edit if needed.</small>
             @error('dropoff_time') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 
