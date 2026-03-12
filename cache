@@ -1,0 +1,294 @@
+-- -------------------------------------------------------------
+-- TablePlus 6.8.2(656)
+--
+-- https://tableplus.com/
+--
+-- Database: zenocars
+-- Generation Time: 2026-03-12 08:18:15.0870
+-- -------------------------------------------------------------
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+DROP TABLE IF EXISTS `cache`;
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `cache_locks`;
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_locks_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `customer_bookings`;
+CREATE TABLE `customer_bookings` (
+  `booking_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `customer_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pickup_location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dropoff_location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pickup_time` timestamp NOT NULL,
+  `vehicle_category` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `booking_source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `assigned_vehicle` bigint unsigned DEFAULT NULL,
+  `assigned_driver` bigint unsigned DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`booking_id`),
+  KEY `customer_bookings_vehicle_category_index` (`vehicle_category`),
+  KEY `customer_bookings_status_index` (`status`),
+  KEY `customer_bookings_pickup_time_index` (`pickup_time`),
+  KEY `customer_bookings_assigned_vehicle_foreign` (`assigned_vehicle`),
+  KEY `customer_bookings_assigned_driver_foreign` (`assigned_driver`),
+  CONSTRAINT `customer_bookings_assigned_driver_foreign` FOREIGN KEY (`assigned_driver`) REFERENCES `drivers` (`driver_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `customer_bookings_assigned_vehicle_foreign` FOREIGN KEY (`assigned_vehicle`) REFERENCES `vehicles` (`vehicle_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `drivers`;
+CREATE TABLE `drivers` (
+  `driver_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned NOT NULL,
+  `vehicle_id` bigint unsigned NOT NULL,
+  `driver_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `license_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `years_experience` int NOT NULL,
+  `languages` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `professional_experience` text COLLATE utf8mb4_unicode_ci,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`driver_id`),
+  UNIQUE KEY `drivers_license_number_unique` (`license_number`),
+  KEY `drivers_supplier_id_index` (`supplier_id`),
+  KEY `drivers_vehicle_id_index` (`vehicle_id`),
+  KEY `drivers_status_index` (`status`),
+  CONSTRAINT `drivers_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `drivers_vehicle_id_foreign` FOREIGN KEY (`vehicle_id`) REFERENCES `vehicles` (`vehicle_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `failed_jobs`;
+CREATE TABLE `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `job_batches`;
+CREATE TABLE `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `jobs`;
+CREATE TABLE `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_reserved_at_available_at_index` (`queue`,`reserved_at`,`available_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `password_reset_tokens`;
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `suppliers`;
+CREATE TABLE `suppliers` (
+  `supplier_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `business_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `business_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_person` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `business_address` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `years_in_business` int NOT NULL,
+  `instagram_page` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `website` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `supplier_score` int NOT NULL DEFAULT '0',
+  `supplier_tier` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`supplier_id`),
+  UNIQUE KEY `suppliers_email_unique` (`email`),
+  KEY `suppliers_city_index` (`city`),
+  KEY `suppliers_status_index` (`status`),
+  KEY `suppliers_supplier_score_index` (`supplier_score`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `vehicles`;
+CREATE TABLE `vehicles` (
+  `vehicle_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_id` bigint unsigned NOT NULL,
+  `vehicle_make` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vehicle_model` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vehicle_year` int NOT NULL,
+  `vehicle_color` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `plate_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vehicle_category` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `passenger_capacity` int NOT NULL,
+  `vehicle_condition` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `air_condition` tinyint(1) NOT NULL DEFAULT '0',
+  `vehicle_location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'available',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`vehicle_id`),
+  UNIQUE KEY `vehicles_plate_number_unique` (`plate_number`),
+  KEY `vehicles_supplier_id_index` (`supplier_id`),
+  KEY `vehicles_vehicle_category_index` (`vehicle_category`),
+  KEY `vehicles_status_index` (`status`),
+  KEY `vehicles_vehicle_location_index` (`vehicle_location`),
+  CONSTRAINT `vehicles_supplier_id_foreign` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('laravel-cache-admin@zenocars|127.0.0.1', 'i:1;', 1773248691),
+('laravel-cache-admin@zenocars|127.0.0.1:timer', 'i:1773248690;', 1773248691);
+
+INSERT INTO `customer_bookings` (`booking_id`, `customer_name`, `customer_phone`, `pickup_location`, `dropoff_location`, `pickup_time`, `vehicle_category`, `booking_source`, `assigned_vehicle`, `assigned_driver`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Chidinma Eze', '+2348012223344', 'Ikeja GRA, Lagos', 'Murtala Muhammed Airport', '2026-03-12 09:30:00', 'sedan', 'website', 1, 1, 'confirmed', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(2, 'Femi Adeyemi', '+2348091112233', 'Lekki Phase 1', 'Eko Hotel & Suites', '2026-03-13 14:00:00', 'van', 'phone', 3, 3, 'pending', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(3, 'Grace Ojo', '+2348073334455', 'Wuse 2, Abuja', 'Asokoro, Abuja', '2026-03-14 11:15:00', 'sedan', 'app', 2, 2, 'confirmed', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(4, 'Samuel Okon', '+2348056667788', 'Surulere, Lagos', 'Victoria Island, Lagos', '2026-03-15 08:00:00', 'sedan', 'website', NULL, NULL, 'pending', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(5, 'Oluwatobi James', '+2348061234545', 'Garki, Abuja', 'Jabi Lake Mall', '2026-03-16 10:45:00', 'luxury', 'app', 7, 7, 'confirmed', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(6, 'Adaeze Nwankwo', '+2348019988776', 'New GRA, Port Harcourt', 'Rumuola, Port Harcourt', '2026-03-17 13:20:00', 'sedan', 'website', 5, 5, 'confirmed', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(8, 'Efe Okoro', '+2348071122334', 'Airport Rd, Warri', 'Enerhen, Warri', '2026-03-19 16:10:00', 'van', 'website', 8, 8, 'confirmed', '2026-03-11 10:48:06', '2026-03-11 10:48:06');
+
+INSERT INTO `drivers` (`driver_id`, `supplier_id`, `vehicle_id`, `driver_name`, `phone_number`, `license_number`, `years_experience`, `languages`, `professional_experience`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Ifeanyi Okeke', '+2348031112233', 'LIC-AX1021', 8, 'English, Yoruba, Igbo', 'Corporate shuttle and executive transport for 5+ years.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(2, 2, 2, 'Usman Abdullahi', '+2348074448899', 'LIC-BX2045', 7, 'English, Hausa', NULL, 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(3, 3, 3, 'Amaka Nwosu', '+2348025556677', 'LIC-CZ3099', 6, 'English, Yoruba', 'Airport transfers and tour routes within Lagos.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(4, 4, 4, 'Khadija Sani', '+2348062227744', 'LIC-DM4412', 5, 'English, Hausa', 'City shuttle operations and corporate client support.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(5, 5, 5, 'Bamidele Ayo', '+2348019098833', 'LIC-EH5531', 9, 'English, Yoruba', 'Corporate routes and offshore transfers.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(6, 6, 6, 'Chukwudi Eze', '+2348081115544', 'LIC-FJ6640', 4, 'English, Igbo', NULL, 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(7, 7, 7, 'Zainab Adamu', '+2348092221133', 'LIC-GK7755', 10, 'English, Hausa', 'Executive chauffeur for VIP clients.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(8, 8, 8, 'Kelvin Okorie', '+2348054477711', 'LIC-HL8829', 5, 'English, Pidgin', 'Intercity transfers and event shuttles.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(9, 9, 9, 'Ngozi Ekwueme', '+2348079900011', 'LIC-JN9932', 6, 'English, Igbo', 'Regional logistics and staff transport.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(10, 10, 10, 'Samuel Adeoye', '+2348036677885', 'LIC-KP1044', 7, 'English, Yoruba', 'Airport transfers and corporate bookings.', 'active', '2026-03-11 10:48:06', '2026-03-11 10:48:06');
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2026_03_11_113826_create_suppliers_table', 2),
+(5, '2026_03_11_113827_create_vehicles_table', 2),
+(6, '2026_03_11_113828_create_drivers_table', 2),
+(7, '2026_03_11_113829_create_customer_bookings_table', 2);
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('EOnMONT0AoAP5tlerxm4IhGkhAfR8XKtlZqq3DAz', 1, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOXhMOTIzODdvVXFBbjZUb3VSVk5WQ0w3NkFxSGNBdGVlVlRFc29tdCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly96ZW5vLnRlc3QvYWRtaW4vY3VzdG9tZXItYm9va2luZ3MiO3M6NToicm91dGUiO3M6MjA6ImFkbWluLmJvb2tpbmdzLmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1773254160);
+
+INSERT INTO `suppliers` (`supplier_id`, `business_name`, `business_type`, `contact_person`, `phone_number`, `email`, `city`, `business_address`, `years_in_business`, `instagram_page`, `website`, `status`, `supplier_score`, `supplier_tier`, `created_at`, `updated_at`) VALUES
+(1, 'Citywide Mobility Ltd', 'Transport Services', 'Aisha Bello', '+2348012345678', 'contact@citywidemobility.test', 'Lagos', '12 Adeola Odeku St, Victoria Island, Lagos', 6, 'citywidemobility', 'https://citywidemobility.test', 'active', 85, 'gold', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(2, 'Northside Chauffeurs', 'Chauffeur Services', 'Tunde Okoro', '+2348098765432', 'hello@northsidechauffeurs.test', 'Abuja', '45 Aminu Kano Cres, Wuse 2, Abuja', 4, NULL, 'https://northsidechauffeurs.test', 'active', 72, 'silver', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(3, 'Coastal Fleet Partners', 'Fleet Leasing', 'Kehinde Olaniyi', '+2348062201133', 'ops@coastalfleet.test', 'Lagos', '18 Admiralty Way, Lekki Phase 1, Lagos', 9, 'coastalfleet', 'https://coastalfleet.test', 'active', 90, 'platinum', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(4, 'Savanna Ride Services', 'Transport Services', 'Fatima Yusuf', '+2347051112299', 'info@savannaride.test', 'Kano', '7 Zoo Road, Kano', 5, NULL, 'https://savannaride.test', 'active', 68, 'silver', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(5, 'Riverline Transport Co', 'Corporate Transport', 'Bola Akinyemi', '+2348023344556', 'admin@riverline.test', 'Port Harcourt', '22 Stadium Rd, Port Harcourt', 7, 'riverlinetransport', NULL, 'active', 74, 'silver', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(6, 'Metroline Logistics', 'Logistics', 'David Umeh', '+2348039901122', 'support@metroline.test', 'Enugu', '5 Ogui Rd, Enugu', 3, NULL, 'https://metroline.test', 'active', 61, 'bronze', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(7, 'Capital Executive Cars', 'Chauffeur Services', 'Zainab Musa', '+2348077711223', 'hello@capitalexec.test', 'Abuja', '16 Ademola Adetokunbo Cres, Abuja', 8, 'capitalexec', 'https://capitalexec.test', 'active', 88, 'gold', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(8, 'Harborlink Mobility', 'Transport Services', 'Chidi Nwachukwu', '+2348095544332', 'ops@harborlink.test', 'Warri', '33 Airport Rd, Warri', 2, NULL, NULL, 'active', 55, 'bronze', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(9, 'Eastern Route Fleet', 'Fleet Leasing', 'Ngozi Okafor', '+2348026677889', 'team@easternroute.test', 'Onitsha', '10 New Market Rd, Onitsha', 10, 'easternroute', 'https://easternroute.test', 'active', 92, 'platinum', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(10, 'Summit Transport Group', 'Corporate Transport', 'Emeka Obi', '+2348041122334', 'contact@summittransport.test', 'Ibadan', '77 Ring Rd, Ibadan', 5, NULL, 'https://summittransport.test', 'active', 70, 'silver', '2026-03-11 10:48:06', '2026-03-11 10:48:06');
+
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Test User', 'admin@zenocars.com', '2026-03-11 10:48:06', '$2y$12$.o8IMPM9kmiISZqvTwQLaODrRbtdmJs3OMGmTObs9IrZqlTiAIwNO', 'KKiMQ480OB1JdZKafvbnLk3jhz8teN7XnvE4k5dLELweX9yfp9H6Ywy44Juj', '2026-03-11 10:48:06', '2026-03-11 10:48:06');
+
+INSERT INTO `vehicles` (`vehicle_id`, `supplier_id`, `vehicle_make`, `vehicle_model`, `vehicle_year`, `vehicle_color`, `plate_number`, `vehicle_category`, `passenger_capacity`, `vehicle_condition`, `air_condition`, `vehicle_location`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Toyota', 'Camry', 2021, 'Black', 'LAG-4523', 'sedan', 4, 'excellent', 1, 'Lagos', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(2, 2, 'Honda', 'Accord', 2020, 'Gray', 'ABJ-3381', 'sedan', 4, 'very good', 1, 'Abuja', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(3, 3, 'Toyota', 'Hiace', 2019, 'White', 'LAG-8741', 'van', 12, 'good', 1, 'Lagos', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(4, 4, 'Hyundai', 'Sonata', 2018, 'Silver', 'KAN-5502', 'sedan', 4, 'good', 1, 'Kano', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(5, 5, 'Toyota', 'Corolla', 2022, 'Blue', 'PHC-1920', 'sedan', 4, 'excellent', 1, 'Port Harcourt', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(6, 6, 'Kia', 'Sportage', 2021, 'Red', 'ENU-7788', 'suv', 5, 'very good', 1, 'Enugu', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(7, 7, 'Mercedes-Benz', 'E-Class', 2022, 'Black', 'ABJ-9021', 'luxury', 4, 'excellent', 1, 'Abuja', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(8, 8, 'Toyota', 'Sienna', 2020, 'White', 'WAR-4012', 'van', 7, 'good', 1, 'Warri', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(9, 9, 'Ford', 'Transit', 2019, 'White', 'ONI-6207', 'van', 14, 'good', 1, 'Onitsha', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06'),
+(10, 10, 'Lexus', 'ES 350', 2021, 'Gray', 'IBA-3344', 'sedan', 4, 'excellent', 1, 'Ibadan', 'available', '2026-03-11 10:48:06', '2026-03-11 10:48:06');
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
