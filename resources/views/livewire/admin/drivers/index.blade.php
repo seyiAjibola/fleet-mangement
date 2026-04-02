@@ -18,7 +18,7 @@
             </div>
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
         </div>
-        <a class="button" href="{{ route('admin.drivers.create') }}">Create driver</a>
+        <a class="button" href="{{ route('admin.drivers.create') }}">Add New Driver</a>
     </div>
 
     <div class="table-card">
@@ -41,6 +41,7 @@
                         <td data-label="Status"><span class="badge">{{ $driver->status }}</span></td>
                         <td>
                             <div class="table-actions">
+                                <a class="button secondary" href="{{ route('admin.drivers.show', $driver) }}">View</a>
                                 <a class="button secondary" href="{{ route('admin.drivers.edit', $driver) }}">Edit</a>
                                 <button class="button secondary" type="button" wire:click="delete({{ $driver->driver_id }})" onclick="return confirm('Delete this driver?')">Delete</button>
                             </div>

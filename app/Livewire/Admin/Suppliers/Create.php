@@ -15,6 +15,8 @@ class Create extends Component
     public string $business_type = '';
     public string $contact_person = '';
     public string $phone_number = '';
+    public ?string $cac_no = null;
+    public ?string $tin = null;
     public string $email = '';
     public string $city = '';
     public string $business_address = '';
@@ -32,6 +34,8 @@ class Create extends Component
             'business_type' => ['required', 'string', 'max:255'],
             'contact_person' => ['required', 'string', 'max:255'],
             'phone_number' => ['required', 'string', 'max:255'],
+            'cac_no' => ['nullable', 'string', 'max:255'],
+            'tin' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:suppliers,email'],
             'city' => ['required', 'string', 'max:255'],
             'business_address' => ['required', 'string'],

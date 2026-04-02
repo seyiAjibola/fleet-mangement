@@ -1,6 +1,10 @@
 <section>
     <x-admin.header pageTitle="Reports" pageSubTitle="Analytics and export center." />
 
+    <div id="bookingSourceData" data-labels='@json($bookingSourceLabels)' data-values='@json($bookingSourceValues)' hidden></div>
+    <div id="vehicleCategoryData" data-labels='@json($vehicleCategoryLabels)' data-values='@json($vehicleCategoryValues)' hidden></div>
+    <div id="supplierTierData" data-labels='@json($supplierTierLabels)' data-values='@json($supplierTierValues)' hidden></div>
+
     <div class="toolbar">
         <div>
             <label for="reports-start">Start date</label>
@@ -17,9 +21,6 @@
     </div>
 
     <div class="card-grid">
-        <div id="bookingSourceData" data-labels='@json($bookingSourceLabels)' data-values='@json($bookingSourceValues)'></div>
-        <div id="vehicleCategoryData" data-labels='@json($vehicleCategoryLabels)' data-values='@json($vehicleCategoryValues)'></div>
-        <div id="supplierTierData" data-labels='@json($supplierTierLabels)' data-values='@json($supplierTierValues)'></div>
         <div class="card chart-card" wire:ignore>
             <h3>Bookings by Source</h3>
             <div class="chart-wrap">

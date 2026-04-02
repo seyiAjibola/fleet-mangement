@@ -9,6 +9,12 @@
         </div>
 
         <div class="form-row">
+            <label for="nin">NIN</label>
+            <input id="nin" type="text" wire:model.defer="nin" />
+            @error('nin') <p class="text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-row">
             <label for="email">Email</label>
             <input id="email" type="email" wire:model.defer="email" />
             @error('email') <p class="text-red-500">{{ $message }}</p> @enderror

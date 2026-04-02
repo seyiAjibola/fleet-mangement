@@ -6,6 +6,9 @@ use App\Models\CustomerBooking;
 use App\Models\Driver;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,6 +17,8 @@ use Livewire\Component;
 #[Title('Admin - Create Booking')]
 class Create extends Component
 {
+    private static ?bool $hasDropoffTimeColumn = null;
+
     public string $customer_name = '';
     public string $customer_phone = '';
     public string $pickup_location = '';
@@ -55,6 +60,7 @@ class Create extends Component
         }
 
         $validated = $this->validate();
+        $this->ensureAssignmentsAreAvailable($validated['assigned_vehicle'], $validated['assigned_driver']);
 
         CustomerBooking::query()->create($validated);
 
@@ -99,6 +105,69 @@ class Create extends Component
         $this->autoDropoff = $this->dropoff_time === null || $this->dropoff_time === '';
     }
 
+    private function ensureAssignmentsAreAvailable(?int $vehicleId, ?int $driverId): void
+    {
+        $window = $this->activeBookingWindow();
+
+        if (! $window || (! $vehicleId && ! $driverId)) {
+            return;
+        }
+
+        [$start, $end] = $window;
+        $activeStatuses = ['pending', 'confirmed', 'in_transit'];
+        $errors = [];
+
+        if ($vehicleId) {
+            $vehicleConflict = CustomerBooking::query()
+                ->whereIn('status', $activeStatuses)
+                ->where('assigned_vehicle', $vehicleId)
+                ->tap(fn (Builder $query) => $this->applyOverlapWindow($query, $start, $end))
+                ->exists();
+
+            if ($vehicleConflict) {
+                $errors['assigned_vehicle'] = 'The selected vehicle is already booked for this time window.';
+            }
+        }
+
+        if ($driverId) {
+            $driverConflict = CustomerBooking::query()
+                ->whereIn('status', $activeStatuses)
+                ->where('assigned_driver', $driverId)
+                ->tap(fn (Builder $query) => $this->applyOverlapWindow($query, $start, $end))
+                ->exists();
+
+            if ($driverConflict) {
+                $errors['assigned_driver'] = 'The selected driver is already booked for this time window.';
+            }
+        }
+
+        if ($errors !== []) {
+            throw ValidationException::withMessages($errors);
+        }
+    }
+
+    private function applyOverlapWindow(Builder $query, Carbon $start, Carbon $end): void
+    {
+        $query->where('pickup_time', '<=', $end);
+
+        if ($this->hasDropoffTimeColumn()) {
+            $query->whereRaw('COALESCE(dropoff_time, pickup_time) >= ?', [$start]);
+
+            return;
+        }
+
+        $query->where('pickup_time', '>=', $start);
+    }
+
+    private function hasDropoffTimeColumn(): bool
+    {
+        if (self::$hasDropoffTimeColumn === null) {
+            self::$hasDropoffTimeColumn = Schema::hasColumn('customer_bookings', 'dropoff_time');
+        }
+
+        return self::$hasDropoffTimeColumn;
+    }
+
     public function render()
     {
         $window = $this->activeBookingWindow();
@@ -115,11 +184,8 @@ class Create extends Component
         if ($window) {
             [$start, $end] = $window;
 
-            $blockedVehicleIdsQuery->where('pickup_time', '<=', $end)
-                ->whereRaw('COALESCE(dropoff_time, pickup_time) >= ?', [$start]);
-
-            $blockedDriverIdsQuery->where('pickup_time', '<=', $end)
-                ->whereRaw('COALESCE(dropoff_time, pickup_time) >= ?', [$start]);
+            $this->applyOverlapWindow($blockedVehicleIdsQuery, $start, $end);
+            $this->applyOverlapWindow($blockedDriverIdsQuery, $start, $end);
         }
 
         $blockedVehicleIds = $blockedVehicleIdsQuery

@@ -3,10 +3,53 @@
     <x-admin.toast />
 
     <div class="toolbar" style="justify-content: space-between">
-        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center">
+        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: end; flex-wrap: wrap">
             <div>
-                <label for="vehicle-search">Search</label>
-                <input id="vehicle-search" type="search" wire:model.defer="search" placeholder="Make, model, plate" />
+                <label for="vehicle-type">Vehicle Type</label>
+                <select id="vehicle-type" wire:model.defer="vehicleType">
+                    <option value="">All</option>
+                    <option value="SUV">SUV</option>
+                    <option value="SEDAN">SEDAN</option>
+                    <option value="TRUCK">TRUCK</option>
+                    <option value="VAN">VAN</option>
+                </select>
+            </div>
+            <div>
+                <label for="vehicle-make">Vehicle Make</label>
+                <input id="vehicle-make" type="search" wire:model.defer="vehicleMake" placeholder="Toyota" />
+            </div>
+            <div>
+                <label for="vehicle-model">Vehicle Model</label>
+                <input id="vehicle-model" type="search" wire:model.defer="vehicleModel" placeholder="LX600" />
+            </div>
+            <div>
+                <label for="vehicle-condition">Vehicle Condition</label>
+                <select id="vehicle-condition" wire:model.defer="vehicleCondition">
+                    <option value="">All</option>
+                    <option value="standard">Standard</option>
+                    <option value="average">Average</option>
+                    <option value="excellent">Excellent</option>
+                </select>
+            </div>
+            <div>
+                <label for="vehicle-plate-number">Vehicle Plate No</label>
+                <input id="vehicle-plate-number" type="search" wire:model.defer="plateNumber" placeholder="Plate no" />
+            </div>
+            <div>
+                <label for="vehicle-year-filter">Year</label>
+                <input id="vehicle-year-filter" type="number" min="2010" max="2027" wire:model.defer="year" placeholder="2010 - 2027" />
+            </div>
+            <div>
+                <label for="vehicle-fuel-type">Fuel Type</label>
+                <select id="vehicle-fuel-type" wire:model.defer="fuelType">
+                    <option value="">All</option>
+                    <option value="gas">Gas</option>
+                    <option value="diesel">Diesel</option>
+                </select>
+            </div>
+            <div>
+                <label for="vehicle-color-filter">Vehicle Color</label>
+                <input id="vehicle-color-filter" type="search" wire:model.defer="vehicleColor" placeholder="Color" />
             </div>
             <div>
                 <label for="vehicle-status">Status</label>
@@ -17,18 +60,24 @@
                 </select>
             </div>
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
+            <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
         </div>
-        <a class="button" href="{{ route('admin.vehicles.create') }}">Create vehicle</a>
+    </div>
+    <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end"> 
+        <a class="button" href="{{ route('admin.vehicles.create') }}">Add New Vehicle</a>
     </div>
 
     <div class="table-card">
         <table>
             <thead>
                 <tr>
+                    <th>Type</th>
                     <th>Make</th>
                     <th>Model</th>
+                    <th>Condition</th>
                     <th>Year</th>
                     <th>Plate</th>
+                    <th>Fuel</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -36,13 +85,17 @@
             <tbody>
                 @forelse ($vehicles as $vehicle)
                     <tr>
+                        <td data-label="Type">{{ $vehicle->vehicle_category }}</td>
                         <td data-label="Make">{{ $vehicle->vehicle_make }}</td>
                         <td data-label="Model">{{ $vehicle->vehicle_model }}</td>
+                        <td data-label="Condition">{{ ucfirst($vehicle->vehicle_condition) }}</td>
                         <td data-label="Year">{{ $vehicle->vehicle_year }}</td>
                         <td data-label="Plate">{{ $vehicle->plate_number }}</td>
+                        <td data-label="Fuel">{{ ucfirst($vehicle->fuel_type ?? '—') }}</td>
                         <td data-label="Status"><span class="badge">{{ $vehicle->status }}</span></td>
                         <td>
                             <div class="table-actions">
+                                <a class="button secondary" href="{{ route('admin.vehicles.show', $vehicle) }}">View</a>
                                 <a class="button secondary" href="{{ route('admin.vehicles.edit', $vehicle) }}">Edit</a>
                                 <button class="button secondary" type="button" wire:click="delete({{ $vehicle->vehicle_id }})" onclick="return confirm('Delete this vehicle?')">Delete</button>
                             </div>
@@ -50,7 +103,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">No vehicles found.</td>
+                        <td colspan="9">No vehicles found.</td>
                     </tr>
                 @endforelse
             </tbody>

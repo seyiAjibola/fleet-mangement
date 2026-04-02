@@ -1,6 +1,9 @@
 <section>
     <x-admin.header pageTitle="Dashboard" pageSubTitle="Live overview of operations and capacity." />
 
+    <div id="bookingStatusData" data-labels='@json($bookingStatusLabels)' data-values='@json($bookingStatusValues)' hidden></div>
+    <div id="vehicleStatusData" data-labels='@json($vehicleStatusLabels)' data-values='@json($vehicleStatusValues)' hidden></div>
+
     <div class="toolbar">
         <div>
             <label for="dashboard-start">Start date</label>
@@ -50,8 +53,6 @@
     </div>
 
     <div class="card-grid" style="margin-top: 24px;">
-        <div id="bookingStatusData" data-labels='@json($bookingStatusLabels)' data-values='@json($bookingStatusValues)'></div>
-        <div id="vehicleStatusData" data-labels='@json($vehicleStatusLabels)' data-values='@json($vehicleStatusValues)'></div>
         <div class="card chart-card" wire:ignore>
             <h3>Bookings by Status</h3>
             <div class="chart-wrap">

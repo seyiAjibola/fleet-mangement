@@ -24,7 +24,7 @@ new #[Layout('layouts.guest')] class extends Component
     public function mount(string $token): void
     {
         if (auth()->check()) {
-            $this->redirectRoute('admin.dashboard', navigate: true);
+            $this->redirectRoute('dashboard', navigate: true);
         }
 
         $this->token = $token;

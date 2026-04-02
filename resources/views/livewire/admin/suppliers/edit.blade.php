@@ -3,7 +3,7 @@
 
     <form class="form-card" wire:submit.prevent="save">
         <div class="form-row">
-            <label for="business_name">Business Name</label>
+            <label for="business_name">Company Name</label>
             <input id="business_name" type="text" wire:model.defer="business_name" />
             @error('business_name') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
@@ -21,9 +21,21 @@
         </div>
 
         <div class="form-row">
-            <label for="phone_number">Phone Number</label>
+            <label for="phone_number">Contact Number</label>
             <input id="phone_number" type="text" wire:model.defer="phone_number" />
             @error('phone_number') <p class="text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-row">
+            <label for="cac_no">CAC No</label>
+            <input id="cac_no" type="text" wire:model.defer="cac_no" />
+            @error('cac_no') <p class="text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-row">
+            <label for="tin">TIN</label>
+            <input id="tin" type="text" wire:model.defer="tin" />
+            @error('tin') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 
         <div class="form-row">
@@ -39,7 +51,7 @@
         </div>
 
         <div class="form-row">
-            <label for="business_address">Business Address</label>
+            <label for="business_address">Location / Address</label>
             <textarea id="business_address" wire:model.defer="business_address"></textarea>
             @error('business_address') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>

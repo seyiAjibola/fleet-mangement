@@ -14,15 +14,64 @@ class Index extends Component
 {
     use WithPagination;
 
-    public string $search = '';
+    public string $vehicleType = '';
+    public string $vehicleMake = '';
+    public string $vehicleModel = '';
+    public string $vehicleCondition = '';
+    public string $plateNumber = '';
+    public string $year = '';
+    public string $fuelType = '';
+    public string $vehicleColor = '';
     public string $status = '';
 
     protected $queryString = [
-        'search' => ['except' => ''],
+        'vehicleType' => ['except' => ''],
+        'vehicleMake' => ['except' => ''],
+        'vehicleModel' => ['except' => ''],
+        'vehicleCondition' => ['except' => ''],
+        'plateNumber' => ['except' => ''],
+        'year' => ['except' => ''],
+        'fuelType' => ['except' => ''],
+        'vehicleColor' => ['except' => ''],
         'status' => ['except' => ''],
     ];
 
-    public function updatedSearch(): void
+    public function updatedVehicleType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedVehicleMake(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedVehicleModel(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedVehicleCondition(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPlateNumber(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedYear(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFuelType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedVehicleColor(): void
     {
         $this->resetPage();
     }
@@ -34,6 +83,23 @@ class Index extends Component
 
     public function applyFilters(): void
     {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset([
+            'vehicleType',
+            'vehicleMake',
+            'vehicleModel',
+            'vehicleCondition',
+            'plateNumber',
+            'year',
+            'fuelType',
+            'vehicleColor',
+            'status',
+        ]);
+
         $this->resetPage();
     }
 
@@ -53,13 +119,14 @@ class Index extends Component
     {
         return view('livewire.admin.vehicles.index', [
             'vehicles' => Vehicle::query()
-                ->when($this->search !== '', function ($query) {
-                    $query->where(function ($inner) {
-                        $inner->where('vehicle_make', 'like', '%' . $this->search . '%')
-                            ->orWhere('vehicle_model', 'like', '%' . $this->search . '%')
-                            ->orWhere('plate_number', 'like', '%' . $this->search . '%');
-                    });
-                })
+                ->when($this->vehicleType !== '', fn ($query) => $query->where('vehicle_category', $this->vehicleType))
+                ->when($this->vehicleMake !== '', fn ($query) => $query->where('vehicle_make', 'like', '%' . $this->vehicleMake . '%'))
+                ->when($this->vehicleModel !== '', fn ($query) => $query->where('vehicle_model', 'like', '%' . $this->vehicleModel . '%'))
+                ->when($this->vehicleCondition !== '', fn ($query) => $query->where('vehicle_condition', $this->vehicleCondition))
+                ->when($this->plateNumber !== '', fn ($query) => $query->where('plate_number', 'like', '%' . $this->plateNumber . '%'))
+                ->when($this->year !== '', fn ($query) => $query->where('vehicle_year', (int) $this->year))
+                ->when($this->fuelType !== '', fn ($query) => $query->where('fuel_type', $this->fuelType))
+                ->when($this->vehicleColor !== '', fn ($query) => $query->where('vehicle_color', 'like', '%' . $this->vehicleColor . '%'))
                 ->when($this->status !== '', function ($query) {
                     $query->where('status', $this->status);
                 })

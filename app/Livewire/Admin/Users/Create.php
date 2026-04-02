@@ -13,6 +13,7 @@ use Livewire\Component;
 class Create extends Component
 {
     public string $name = '';
+    public ?string $nin = null;
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -21,6 +22,7 @@ class Create extends Component
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'nin' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)],
         ];
@@ -32,6 +34,7 @@ class Create extends Component
 
         User::query()->create([
             'name' => $validated['name'],
+            'nin' => $validated['nin'],
             'email' => $validated['email'],
             'password' => $validated['password'],
         ]);

@@ -27,7 +27,7 @@
 
         <div class="form-row">
             <label for="vehicle_year">Year</label>
-            <input id="vehicle_year" type="number" wire:model.defer="vehicle_year" />
+            <input id="vehicle_year" type="number" min="2010" max="2027" wire:model.defer="vehicle_year" />
             @error('vehicle_year') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 
@@ -44,8 +44,13 @@
         </div>
 
         <div class="form-row">
-            <label for="vehicle_category">Category</label>
-            <input id="vehicle_category" type="text" wire:model.defer="vehicle_category" />
+            <label for="vehicle_category">Vehicle Type</label>
+            <select id="vehicle_category" wire:model.defer="vehicle_category">
+                <option value="SUV">SUV</option>
+                <option value="SEDAN">SEDAN</option>
+                <option value="TRUCK">TRUCK</option>
+                <option value="VAN">VAN</option>
+            </select>
             @error('vehicle_category') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 
@@ -57,8 +62,21 @@
 
         <div class="form-row">
             <label for="vehicle_condition">Condition</label>
-            <input id="vehicle_condition" type="text" wire:model.defer="vehicle_condition" />
+            <select id="vehicle_condition" wire:model.defer="vehicle_condition">
+                <option value="standard">Standard</option>
+                <option value="average">Average</option>
+                <option value="excellent">Excellent</option>
+            </select>
             @error('vehicle_condition') <p class="text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-row">
+            <label for="fuel_type">Fuel Type</label>
+            <select id="fuel_type" wire:model.defer="fuel_type">
+                <option value="gas">Gas</option>
+                <option value="diesel">Diesel</option>
+            </select>
+            @error('fuel_type') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 
         <div class="form-row">
@@ -78,7 +96,10 @@
 
         <div class="form-row">
             <label for="status">Status</label>
-            <input id="status" type="text" wire:model.defer="status" />
+            <select id="status" wire:model.defer="status">
+                <option value="available">Available</option>
+                <option value="unavailable">Unavailable</option>
+            </select>
             @error('status') <p class="text-red-500">{{ $message }}</p> @enderror
         </div>
 

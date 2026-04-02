@@ -1,60 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Zeno Cars Admin
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Zeno Cars is a Laravel and Livewire admin application for managing a car hire operation.
 
-## About Laravel
+The app is built for internal staff use. After login, users are redirected to the admin area at `/admin`, where they can manage suppliers, vehicles, drivers, customer bookings, and reports.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## What The App Does
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Authenticates staff users.
+- Shows an admin dashboard with operational summaries.
+- Manages users and identity details such as NIN.
+- Manages suppliers with company, compliance, and fleet filters.
+- Manages vehicles with structured filters, detail pages, and image galleries.
+- Manages drivers and their supplier/vehicle assignments.
+- Manages customer bookings with conflict prevention for vehicle and driver assignments.
+- Shows reports with charts and CSV exports.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Main Features
 
-## Learning Laravel
+### Authentication
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- `/` redirects to `/login`.
+- Successful login and registration redirect to `/admin`.
+- Password reset, email verification, and profile management are available.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Admin Dashboard
 
-## Laravel Sponsors
+- Displays totals for users, suppliers, vehicles, drivers, and bookings.
+- Shows booking and vehicle status charts.
+- Supports date filtering and CSV export for dashboard summaries.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Users
 
-### Premium Partners
+- Create, edit, view, and delete users.
+- Filter users by name and NIN.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Suppliers
 
-## Contributing
+- Create, edit, view, and delete suppliers.
+- Track company name, contact person, contact number, CAC No, TIN, city, and address.
+- Filter suppliers by company name, contact person, contact number, number of cars, location/address, CAC No, TIN, and status.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Vehicles
 
-## Code of Conduct
+- Create, edit, view, and delete vehicles.
+- Track type, make, model, year, color, plate number, fuel type, condition, and status.
+- Filter vehicles by type, make, model, condition, plate number, year, fuel type, color, and status.
+- Upload multiple images from the vehicle detail page.
+- Set a primary image, preview images in a modal, and delete images.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Drivers
 
-## Security Vulnerabilities
+- Create, edit, view, and delete drivers.
+- Track supplier, assigned vehicle, phone number, license, languages, and professional experience.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Customer Bookings
 
-## License
+- Create, edit, view, and delete bookings.
+- Assign vehicles and drivers.
+- Prevent conflicting assignments at save time, not just in the UI.
+- Filter bookings by search text, status, and date range.
+- Update booking status from the bookings list.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# car-hire-solution
+### Reports
+
+- View charts for booking sources, vehicle categories, and supplier tiers.
+- Export report data as CSV.
+
+## Technology
+
+- Laravel 12
+- Livewire 3
+- Livewire Volt
+- Blade
+- Tailwind CSS
+- Chart.js
+
+## Quick Start
+
+1. Install PHP and Node dependencies.
+2. Create the `.env` file.
+3. Generate the app key.
+4. Run migrations.
+5. Create the storage symlink.
+6. Start the Laravel and Vite servers.
+
+Example:
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+npm install
+composer run dev
+```
+
+## Important Setup Notes
+
+- Vehicle image uploads require `php artisan storage:link`.
+- New schema updates in this project include:
+  - `suppliers.cac_no`
+  - `suppliers.tin`
+  - `users.nin`
+  - `vehicles.fuel_type`
+  - `vehicle_images` table
+
+If your local database is older, run:
+
+```bash
+php artisan migrate
+```
+
+## Testing
+
+Run the full test suite with:
+
+```bash
+php artisan test
+```
+
+## Documentation
+
+- [Feature Guide](docs/FEATURES.md)
+- [Setup Guide](docs/SETUP.md)

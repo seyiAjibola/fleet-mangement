@@ -14,19 +14,32 @@ class Index extends Component
 {
     use WithPagination;
 
-    public string $search = '';
+    public string $userName = '';
+    public string $nin = '';
 
     protected $queryString = [
-        'search' => ['except' => ''],
+        'userName' => ['except' => ''],
+        'nin' => ['except' => ''],
     ];
 
-    public function updatedSearch(): void
+    public function updatedUserName(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedNin(): void
     {
         $this->resetPage();
     }
 
     public function applyFilters(): void
     {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset(['userName', 'nin']);
         $this->resetPage();
     }
 
@@ -46,12 +59,8 @@ class Index extends Component
     {
         return view('livewire.admin.users.index', [
             'users' => User::query()
-                ->when($this->search !== '', function ($query) {
-                    $query->where(function ($inner) {
-                        $inner->where('name', 'like', '%' . $this->search . '%')
-                            ->orWhere('email', 'like', '%' . $this->search . '%');
-                    });
-                })
+                ->when($this->userName !== '', fn ($query) => $query->where('name', 'like', '%' . $this->userName . '%'))
+                ->when($this->nin !== '', fn ($query) => $query->where('nin', 'like', '%' . $this->nin . '%'))
                 ->latest()
                 ->paginate(10),
         ]);

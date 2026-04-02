@@ -31,7 +31,7 @@
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
             <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
         </div>
-        <a class="button" href="{{ route('admin.bookings.create') }}">Create booking</a>
+        <a class="button" href="{{ route('admin.bookings.create') }}">Add New Booking</a>
     </div>
 
     <div class="table-card">
@@ -58,6 +58,7 @@
                         <td data-label="Status"><span class="badge">{{ $booking->status }}</span></td>
                         <td>
                             <div class="table-actions">
+                                <a class="button secondary" href="{{ route('admin.bookings.show', $booking) }}">View</a>
                                 <a class="button secondary" href="{{ route('admin.bookings.edit', $booking) }}">Edit</a>
                                 <button class="button secondary" type="button" wire:click="confirmBooking({{ $booking->booking_id }})">Confirm</button>
                                 <button class="button secondary" type="button" wire:click="rejectBooking({{ $booking->booking_id }})">Reject</button>

@@ -16,6 +16,8 @@ class Edit extends Component
     public string $business_type = '';
     public string $contact_person = '';
     public string $phone_number = '';
+    public ?string $cac_no = null;
+    public ?string $tin = null;
     public string $email = '';
     public string $city = '';
     public string $business_address = '';
@@ -33,6 +35,8 @@ class Edit extends Component
         $this->business_type = $supplier->business_type;
         $this->contact_person = $supplier->contact_person;
         $this->phone_number = $supplier->phone_number;
+        $this->cac_no = $supplier->cac_no;
+        $this->tin = $supplier->tin;
         $this->email = $supplier->email;
         $this->city = $supplier->city;
         $this->business_address = $supplier->business_address;
@@ -51,6 +55,8 @@ class Edit extends Component
             'business_type' => ['required', 'string', 'max:255'],
             'contact_person' => ['required', 'string', 'max:255'],
             'phone_number' => ['required', 'string', 'max:255'],
+            'cac_no' => ['nullable', 'string', 'max:255'],
+            'tin' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:suppliers,email,' . $this->supplier->supplier_id . ',supplier_id'],
             'city' => ['required', 'string', 'max:255'],
             'business_address' => ['required', 'string'],
