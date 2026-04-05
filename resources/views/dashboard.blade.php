@@ -11,7 +11,7 @@
                 <div class="grid gap-6 px-6 py-8 lg:grid-cols-[1.35fr,0.65fr] lg:px-8">
                     <div class="space-y-4">
                         <span class="inline-flex items-center rounded-full bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-700">
-                            Zeno Cars Workspace
+                            Zenocar Workspace
                         </span>
                         <div class="space-y-2">
                             <h1 class="text-3xl font-semibold tracking-tight text-stone-900">

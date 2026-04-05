@@ -1,4 +1,4 @@
-# Zeno Cars Admin
+# Zenocar Admin
 
 Zeno Cars is a Laravel and Livewire admin application for managing a car hire operation.
 

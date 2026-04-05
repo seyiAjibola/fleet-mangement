@@ -915,7 +915,7 @@
     <div class="admin-shell">
         <button class="admin-sidebar-backdrop" type="button" aria-label="Close navigation"></button>
         <aside class="admin-sidebar" id="admin-sidebar">
-            <div class="brand">Zeno Cars</div>
+            <div class="brand">Zenocar</div>
             <nav class="nav-group">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
                 @if (auth()->user()->isAdmin())
@@ -942,7 +942,7 @@
                 <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
                     <div style="width: 12px; height: 12px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), #14b8a6); box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.08);"></div>
                     <div style="min-width: 0;">
-                        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700;">Zeno Cars Admin</div>
+                        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700;">Zenocar Admin</div>
                         <div style="font-size: 0.95rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ auth()->user()->isAdmin() ? 'Operations Control' : 'Staff Workspace' }}</div>
                     </div>
                 </div>
