@@ -48,8 +48,14 @@ class Create extends Component
     public function save(): void
     {
         $validated = $this->validate();
+        abort_unless(
+            Supplier::query()->visibleTo(auth()->user())->whereKey($validated['supplier_id'])->exists(),
+            403
+        );
+        $validated['created_by_user_id'] = auth()->id();
 
         $vehicle = Vehicle::query()->create($validated);
+        $vehicle->supplier?->syncTier();
         session()->flash('open_vehicle_upload_modal', true);
 
         $this->redirectRoute('admin.vehicles.show', ['vehicle' => $vehicle]);
@@ -57,8 +63,12 @@ class Create extends Component
 
     public function render()
     {
+        $suppliersQuery = Supplier::query()
+            ->visibleTo(auth()->user())
+            ->orderBy('business_name');
+
         return view('livewire.admin.vehicles.create', [
-            'suppliers' => Supplier::query()->orderBy('business_name')->get(['supplier_id', 'business_name']),
+            'suppliers' => $suppliersQuery->get(['supplier_id', 'business_name']),
         ]);
     }
 }

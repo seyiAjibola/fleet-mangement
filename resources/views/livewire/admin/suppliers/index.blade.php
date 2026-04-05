@@ -71,12 +71,12 @@
                         <td data-label="Contact Number">{{ $supplier->phone_number }}</td>
                         <td data-label="Cars">{{ $supplier->vehicles_count }}</td>
                         <td data-label="Location">{{ $supplier->city }}</td>
-                        <td data-label="Status"><span class="badge">{{ $supplier->status }}</span></td>
+                        <td data-label="Status"><span class="badge" data-status="{{ $supplier->status }}">{{ $supplier->status }}</span></td>
                         <td>
                             <div class="table-actions">
-                                <a class="button secondary" href="{{ route('admin.suppliers.show', $supplier) }}">View</a>
-                                <a class="button secondary" href="{{ route('admin.suppliers.edit', $supplier) }}">Edit</a>
-                                <button class="button secondary" type="button" wire:click="delete({{ $supplier->supplier_id }})" onclick="return confirm('Delete this supplier?')">Delete</button>
+                                <a class="button secondary icon-button icon-view" href="{{ route('admin.suppliers.show', $supplier) }}" aria-label="View supplier" title="View supplier"><x-admin.icon name="view" /></a>
+                                <a class="button secondary icon-button icon-edit" href="{{ route('admin.suppliers.edit', $supplier) }}" aria-label="Edit supplier" title="Edit supplier"><x-admin.icon name="edit" /></a>
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $supplier->supplier_id }})" onclick="return confirm('Delete this supplier?')" aria-label="Delete supplier" title="Delete supplier"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>

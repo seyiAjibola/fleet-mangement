@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Driver extends Model
 {
+    use OwnedByUser;
+
     protected $primaryKey = 'driver_id';
 
     protected $fillable = [
+        'created_by_user_id',
         'supplier_id',
         'vehicle_id',
         'driver_name',

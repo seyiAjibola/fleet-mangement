@@ -14,6 +14,7 @@ class Create extends Component
 {
     public string $name = '';
     public ?string $nin = null;
+    public string $role = 'staff';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -23,6 +24,7 @@ class Create extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'nin' => ['nullable', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,staff'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'confirmed', Password::min(8)],
         ];
@@ -35,6 +37,7 @@ class Create extends Component
         User::query()->create([
             'name' => $validated['name'],
             'nin' => $validated['nin'],
+            'role' => $validated['role'],
             'email' => $validated['email'],
             'password' => $validated['password'],
         ]);

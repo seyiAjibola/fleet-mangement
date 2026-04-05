@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OwnedByUser;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
+    use OwnedByUser;
+
     protected $primaryKey = 'vehicle_id';
 
     protected $fillable = [
+        'created_by_user_id',
         'supplier_id',
         'vehicle_make',
         'vehicle_model',
@@ -37,5 +41,10 @@ class Vehicle extends Model
             ->orderByDesc('is_primary')
             ->orderBy('sort_order')
             ->orderBy('id');
+    }
+
+    public function drivers(): HasMany
+    {
+        return $this->hasMany(Driver::class, 'vehicle_id', 'vehicle_id');
     }
 }

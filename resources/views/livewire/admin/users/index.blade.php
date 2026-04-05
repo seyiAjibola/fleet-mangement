@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Role</th>
                     <th>NIN</th>
                     <th>Email</th>
                     <th></th>
@@ -32,19 +33,20 @@
                 @forelse ($users as $user)
                     <tr>
                         <td data-label="Name">{{ $user->name }}</td>
+                        <td data-label="Role">{{ ucfirst($user->role) }}</td>
                         <td data-label="NIN">{{ $user->nin ?: '—' }}</td>
                         <td data-label="Email">{{ $user->email }}</td>
                         <td>
                             <div class="table-actions">
-                                <a class="button secondary" href="{{ route('admin.users.show', $user) }}">View</a>
-                                <a class="button secondary" href="{{ route('admin.users.edit', $user) }}">Edit</a>
-                                <button class="button secondary" type="button" wire:click="delete({{ $user->id }})" onclick="return confirm('Delete this user?')">Delete</button>
+                                <a class="button secondary icon-button icon-view" href="{{ route('admin.users.show', $user) }}" aria-label="View user" title="View user"><x-admin.icon name="view" /></a>
+                                <a class="button secondary icon-button icon-edit" href="{{ route('admin.users.edit', $user) }}" aria-label="Edit user" title="Edit user"><x-admin.icon name="edit" /></a>
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $user->id }})" onclick="return confirm('Delete this user?')" aria-label="Delete user" title="Delete user"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4">No users found.</td>
+                        <td colspan="5">No users found.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -18,6 +18,7 @@
             --bg: #f4f2ee;
             --panel: #ffffff;
             --panel-strong: #f9f6f2;
+            --panel-soft: #f6f1ea;
             --ink: #1f2328;
             --muted: #6b7280;
             --accent: #0f766e;
@@ -38,11 +39,16 @@
             background: radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.12), transparent 45%),
                         radial-gradient(circle at 90% 20%, rgba(15, 118, 110, 0.12), transparent 50%),
                         var(--bg);
+            overflow-x: hidden;
         }
 
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
         }
 
         .admin-shell {
@@ -51,10 +57,21 @@
             min-height: 100vh;
         }
 
+        .admin-shell > main {
+            min-width: 0;
+        }
+
+        .admin-sidebar-backdrop {
+            display: none;
+        }
+
         .admin-sidebar {
             padding: 32px 24px;
-            background: var(--panel);
+            background:
+                radial-gradient(circle at top left, rgba(245, 158, 11, 0.12), transparent 32%),
+                linear-gradient(180deg, #fffdfa 0%, #f5efe8 100%);
             border-right: 1px solid var(--border);
+            position: relative;
         }
 
         .brand {
@@ -62,6 +79,11 @@
             font-weight: 700;
             letter-spacing: 0.02em;
             margin-bottom: 28px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(231, 226, 219, 0.9);
+            box-shadow: 0 12px 32px rgba(31, 35, 40, 0.06);
         }
 
         .nav-group {
@@ -75,14 +97,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.58);
             color: var(--muted);
             font-weight: 500;
+            border: 1px solid transparent;
+            backdrop-filter: blur(10px);
         }
 
         .nav-link.active {
-            background: rgba(15, 118, 110, 0.12);
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.16), rgba(15, 118, 110, 0.08));
             color: var(--accent);
+            border-color: rgba(15, 118, 110, 0.24);
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.12);
         }
 
         .subnav {
@@ -111,12 +137,33 @@
 
         .nav-link:hover,
         .nav-link:focus {
-            background: var(--panel-strong);
+            background: rgba(255, 255, 255, 0.88);
             color: var(--ink);
+            border-color: rgba(31, 35, 40, 0.08);
         }
 
         .admin-main {
             padding: 16px 40px 48px;
+            min-width: 0;
+        }
+
+        .admin-mobile-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        .admin-mobile-toggle svg {
+            width: 20px;
+            height: 20px;
         }
 
         .page-title {
@@ -126,7 +173,7 @@
         }
 
         .page-subtitle {
-            color: var(--muted);
+            color: rgba(31, 35, 40, 0.72);
             margin: 0 0 24px;
         }
 
@@ -273,7 +320,7 @@
         .card h3 {
             margin: 0 0 6px;
             font-size: 0.95rem;
-            color: var(--muted);
+            color: var(--ink);
             font-weight: 600;
         }
 
@@ -297,15 +344,38 @@
         .form-card textarea {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--panel);
+            border-radius: 14px;
+            border: 1px solid rgba(31, 35, 40, 0.08);
+            background: linear-gradient(180deg, #fffdfa 0%, #f8f3ec 100%);
             font-size: 0.95rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
         }
 
         .toolbar input,
         .toolbar select {
             min-width: 220px;
+        }
+
+        .toolbar label {
+            display: inline-block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: #374151;
+        }
+
+        .toolbar input:focus,
+        .toolbar select:focus,
+        .form-card input:focus,
+        .form-card select:focus,
+        .form-card textarea:focus {
+            outline: none;
+            border-color: rgba(15, 118, 110, 0.35);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+            background: #fffefb;
         }
 
         .button {
@@ -316,6 +386,10 @@
             color: white;
             font-weight: 600;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .button.secondary {
@@ -325,12 +399,61 @@
             color: white;
         }
 
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 12px;
+            flex: 0 0 auto;
+        }
+
+        .icon-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-button.icon-view {
+            background: rgba(15, 118, 110, 0.12);
+            color: #0f766e;
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .icon-button.icon-edit {
+            background: rgba(31, 35, 40, 0.12);
+            color: #1f2328;
+            border-color: rgba(31, 35, 40, 0.16);
+        }
+
+        .icon-button.icon-delete,
+        .icon-button.icon-reject,
+        .icon-button.icon-cancel,
+        .icon-button.icon-close {
+            background: rgba(220, 38, 38, 0.12);
+            color: #dc2626;
+            border-color: rgba(220, 38, 38, 0.2);
+        }
+
+        .icon-button.icon-confirm,
+        .icon-button.icon-upload,
+        .icon-button.icon-star {
+            background: rgba(15, 118, 110, 0.12);
+            color: #0f766e;
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .icon-button.icon-back {
+            background: rgba(31, 35, 40, 0.12);
+            color: #1f2328;
+            border-color: rgba(31, 35, 40, 0.16);
+        }
+
         .table-card {
             background: var(--panel);
             border-radius: var(--radius);
             padding: 16px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow);
+            overflow-x: auto;
         }
 
         table {
@@ -345,12 +468,17 @@
             font-size: 0.95rem;
         }
 
+        thead th {
+            background: linear-gradient(180deg, #f7f4ef 0%, #f1ece5 100%);
+        }
+
         th {
-            color: var(--muted);
-            font-weight: 600;
+            color: var(--ink);
+            font-weight: 700;
             letter-spacing: 0.02em;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
+            box-shadow: inset 0 -1px 0 rgba(31, 35, 40, 0.06);
         }
 
         .table-actions {
@@ -493,6 +621,32 @@
             color: var(--accent);
         }
 
+        .badge[data-status='active'],
+        .badge[data-status='available'],
+        .badge[data-status='confirmed'],
+        .badge[data-status='completed'] {
+            background: rgba(15, 118, 110, 0.12);
+            color: #0f766e;
+        }
+
+        .badge[data-status='pending'],
+        .badge[data-status='in_transit'] {
+            background: rgba(245, 158, 11, 0.14);
+            color: #b45309;
+        }
+
+        .badge[data-status='inactive'],
+        .badge[data-status='unavailable'] {
+            background: rgba(31, 35, 40, 0.12);
+            color: #1f2328;
+        }
+
+        .badge[data-status='cancelled'],
+        .badge[data-status='rejected'] {
+            background: rgba(220, 38, 38, 0.12);
+            color: #dc2626;
+        }
+
         .flash {
             padding: 10px 14px;
             border-radius: 12px;
@@ -562,6 +716,14 @@
             max-width: 720px;
         }
 
+        .form-card header h2 {
+            color: var(--ink);
+        }
+
+        .form-card header p {
+            color: rgba(31, 35, 40, 0.72);
+        }
+
         .form-row {
             display: grid;
             gap: 6px;
@@ -569,7 +731,7 @@
 
         .form-row label {
             font-weight: 600;
-            color: var(--muted);
+            color: var(--ink);
             font-size: 0.85rem;
         }
 
@@ -577,6 +739,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .chart-card {
@@ -596,15 +759,111 @@
             }
 
             .admin-sidebar {
-                position: sticky;
+                position: fixed;
                 top: 0;
-                z-index: 10;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
+                left: 0;
+                bottom: 0;
+                width: min(300px, 82vw);
+                max-width: 100%;
+                overflow-y: auto;
+                z-index: 80;
+                border-right: 1px solid var(--border);
+                border-bottom: none;
+                box-shadow: var(--shadow);
+                transform: translateX(-100%);
+                transition: transform 180ms ease;
+            }
+
+            body.admin-sidebar-open {
+                overflow: hidden;
+            }
+
+            body.admin-sidebar-open .admin-sidebar {
+                transform: translateX(0);
+            }
+
+            .admin-sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(31, 35, 40, 0.45);
+                z-index: 70;
+            }
+
+            body.admin-sidebar-open .admin-sidebar-backdrop {
+                display: block;
+            }
+
+            .admin-mobile-toggle {
+                display: inline-flex;
+            }
+
+            .admin-topbar-mobile {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .admin-main {
+                padding: 16px 18px 40px;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+
+            .toolbar {
+                justify-content: space-between;
+                align-items: stretch;
+            }
+
+            .toolbar > * {
+                max-width: 100%;
+            }
+
+            .toolbar > div[style*='display: flex'] {
+                width: 100%;
+                flex-wrap: wrap !important;
+                align-items: stretch !important;
+            }
+
+            .toolbar input,
+            .toolbar select {
+                min-width: 0;
+            }
+
+            .table-actions {
+                width: 100%;
+            }
+
+            .table-actions .button,
+            .table-actions a.button,
+            .form-actions .button,
+            .form-actions a.button {
+                flex: 1 1 calc(50% - 12px);
             }
         }
 
         @media (max-width: 720px) {
+            .admin-topbar-trigger span {
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .toolbar,
+            .form-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar .button,
+            .toolbar a.button,
+            .form-actions .button,
+            .form-actions a.button {
+                width: 100%;
+            }
+
             table thead {
                 display: none;
             }
@@ -639,6 +898,12 @@
                 justify-content: flex-end;
             }
 
+            .table-actions .button,
+            .table-actions a.button {
+                flex: 1 1 100%;
+                width: 100%;
+            }
+
             .admin-modal-shell {
                 padding: 12px;
             }
@@ -648,20 +913,39 @@
 </head>
 <body class="font-sans antialiased">
     <div class="admin-shell">
-        <aside class="admin-sidebar">
+        <button class="admin-sidebar-backdrop" type="button" aria-label="Close navigation"></button>
+        <aside class="admin-sidebar" id="admin-sidebar">
             <div class="brand">Zeno Cars</div>
             <nav class="nav-group">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
-                <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
+                @if (auth()->user()->isAdmin())
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
+                @endif
                 <a class="nav-link {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}" href="{{ route('admin.suppliers.index') }}">Suppliers</a>
                 <a class="nav-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}" href="{{ route('admin.vehicles.index') }}">Vehicles</a>
                 <a class="nav-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}" href="{{ route('admin.drivers.index') }}">Drivers</a>
                 <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">Bookings</a>
-                <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">Reports</a>
+                @if (auth()->user()->isAdmin())
+                    <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">Reports</a>
+                @endif
             </nav>
         </aside>
         <main>
-            <div class="bg-white backdrop-blur-sm rounded-lg p-4 mb-2 border border-gray-200 shadow-sm flex justify-end">
+            <div class="bg-white/85 backdrop-blur-sm rounded-2xl p-4 mb-2 border border-gray-200 shadow-sm flex justify-between items-center gap-3" style="background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(249,246,242,0.92)); box-shadow: 0 18px 45px rgba(31, 35, 40, 0.08);">
+                <div class="admin-topbar-mobile">
+                    <button class="admin-mobile-toggle" type="button" aria-label="Open navigation" aria-controls="admin-sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill="currentColor" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4A1 1 0 013 5zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm1 4a1 1 0 100 2h12a1 1 0 100-2H4z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                    <div style="width: 12px; height: 12px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), #14b8a6); box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.08);"></div>
+                    <div style="min-width: 0;">
+                        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700;">Zeno Cars Admin</div>
+                        <div style="font-size: 0.95rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ auth()->user()->isAdmin() ? 'Operations Control' : 'Staff Workspace' }}</div>
+                    </div>
+                </div>
                 <div class="admin-topbar-right">
                     <details class="admin-topbar-menu">
                         <summary class="admin-topbar-trigger">
@@ -722,7 +1006,11 @@
                 </div>
             @endif --}}
             <div class="admin-main">
-                {{ $slot ?? '' }}
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot ?? '' }}
+                @endif
             </div>
         </main>
     </div>
@@ -738,30 +1026,94 @@
             }
         });
 
-        function setupToasts() {
-            document.querySelectorAll('[data-toast]').forEach(function (toast) {
-                const close = toast.querySelector('[data-toast-close]');
-                if (close) {
-                    close.addEventListener('click', function () {
-                        toast.remove();
-                    });
+        function initializeToast(toast) {
+            if (toast.dataset.toastInitialized) {
+                return;
+            }
+
+            toast.dataset.toastInitialized = 'true';
+
+            setTimeout(function () {
+                if (toast && toast.parentNode) {
+                    toast.remove();
                 }
-                setTimeout(function () {
-                    if (toast && toast.parentNode) {
-                        toast.remove();
-                    }
-                }, 3500);
+            }, 6000);
+        }
+
+        function setupToasts() {
+            document.querySelectorAll('[data-toast]').forEach(initializeToast);
+        }
+
+        function bindToastClose() {
+            if (document.toastCloseBound) {
+                return;
+            }
+
+            document.toastCloseBound = true;
+            document.addEventListener('click', function (event) {
+                const trigger = event.target.closest('[data-toast-close]');
+                if (!trigger) {
+                    return;
+                }
+                const toast = trigger.closest('[data-toast]');
+                if (toast) {
+                    toast.remove();
+                }
+            });
+        }
+
+        function setupAdminSidebar() {
+            const body = document.body;
+            const toggle = document.querySelector('.admin-mobile-toggle');
+            const backdrop = document.querySelector('.admin-sidebar-backdrop');
+            const navLinks = document.querySelectorAll('.admin-sidebar .nav-link');
+
+            function closeSidebar() {
+                body.classList.remove('admin-sidebar-open');
+            }
+
+            function toggleSidebar() {
+                body.classList.toggle('admin-sidebar-open');
+            }
+
+            if (toggle) {
+                toggle.onclick = toggleSidebar;
+            }
+
+            if (backdrop) {
+                backdrop.onclick = closeSidebar;
+            }
+
+            navLinks.forEach(function (link) {
+                link.addEventListener('click', closeSidebar);
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 960) {
+                    closeSidebar();
+                }
             });
         }
 
         document.addEventListener('DOMContentLoaded', setupToasts);
+        document.addEventListener('DOMContentLoaded', setupAdminSidebar);
 
+        setupToasts();
+        bindToastClose();
         document.addEventListener('livewire:navigated', function () {
             setupToasts();
+            setupAdminSidebar();
+            document.body.classList.remove('admin-sidebar-open');
             if (typeof window.initZenoCharts === 'function') {
                 window.initZenoCharts();
             }
         });
+
+        if (window.Livewire) {
+            window.Livewire.hook('message.processed', function () {
+                setupToasts();
+            });
+        }
     </script>
     @livewireScripts
 </body>

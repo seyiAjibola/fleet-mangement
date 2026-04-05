@@ -71,6 +71,7 @@ class Index extends Component
         [$start, $end] = $this->bookingRange();
 
         $rows = CustomerBooking::query()
+            ->visibleTo(auth()->user())
             ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
@@ -92,6 +93,7 @@ class Index extends Component
     public function exportVehicleStatus()
     {
         $rows = Vehicle::query()
+            ->visibleTo(auth()->user())
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->orderBy('status')
@@ -111,9 +113,11 @@ class Index extends Component
 
     public function render()
     {
+        $user = auth()->user();
         [$start, $end] = $this->bookingRange();
 
         $bookingStatusCounts = CustomerBooking::query()
+            ->visibleTo($user)
             ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
@@ -121,24 +125,43 @@ class Index extends Component
             ->all();
 
         $vehicleStatusCounts = Vehicle::query()
+            ->visibleTo($user)
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
             ->all();
 
         return view('livewire.admin.dashboard.index', [
-            'userCount' => User::query()->count(),
-            'supplierCount' => Supplier::query()->count(),
-            'vehicleCount' => Vehicle::query()->count(),
-            'driverCount' => Driver::query()->count(),
+            'isAdmin' => $user->isAdmin(),
+            'userCount' => $user->isAdmin() ? User::query()->count() : null,
+            'supplierCount' => Supplier::query()->visibleTo($user)->count(),
+            'vehicleCount' => Vehicle::query()->visibleTo($user)->count(),
+            'driverCount' => Driver::query()->visibleTo($user)->count(),
             'bookingCount' => CustomerBooking::query()
+                ->visibleTo($user)
                 ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
                 ->count(),
+            'confirmedBookings' => CustomerBooking::query()
+                ->visibleTo($user)
+                ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
+                ->where('status', 'confirmed')
+                ->count(),
             'pendingBookings' => CustomerBooking::query()
+                ->visibleTo($user)
                 ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
                 ->where('status', 'pending')
                 ->count(),
-            'availableVehicles' => Vehicle::query()->where('status', 'available')->count(),
+            'rejectedBookings' => CustomerBooking::query()
+                ->visibleTo($user)
+                ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
+                ->where('status', 'rejected')
+                ->count(),
+            'canceledBookings' => CustomerBooking::query()
+                ->visibleTo($user)
+                ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
+                ->where('status', 'cancelled')
+                ->count(),
+            'availableVehicles' => Vehicle::query()->visibleTo($user)->where('status', 'available')->count(),
             'bookingStatusLabels' => array_keys($bookingStatusCounts),
             'bookingStatusValues' => array_values($bookingStatusCounts),
             'vehicleStatusLabels' => array_keys($vehicleStatusCounts),

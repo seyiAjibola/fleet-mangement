@@ -12,7 +12,7 @@ new #[Layout('layouts.guest')] class extends Component
     public function mount(): void
     {
         if (auth()->check()) {
-            $this->redirectRoute('admin.dashboard', navigate: true);
+            $this->redirectRoute(auth()->user()->homeRouteName(), navigate: true);
         }
     }
 
@@ -27,7 +27,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route(auth()->user()->homeRouteName(), absolute: false), navigate: true);
     }
 }; ?>
 

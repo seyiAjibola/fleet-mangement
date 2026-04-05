@@ -9,9 +9,9 @@
                 <p style="margin: 6px 0 0; color: var(--muted);">{{ $vehicle->plate_number }} • {{ $vehicle->vehicle_category }}</p>
             </div>
             <div class="table-actions">
-                <button class="button" type="button" wire:click="openUploadModal">Upload Images</button>
-                <a class="button secondary" href="{{ route('admin.vehicles.edit', $vehicle) }}">Edit Vehicle</a>
-                <a class="button secondary" href="{{ route('admin.vehicles.index') }}">Back to Vehicles</a>
+                <button class="button icon-button icon-upload" type="button" wire:click="openUploadModal" aria-label="Upload images" title="Upload images"><x-admin.icon name="upload" /></button>
+                <a class="button secondary icon-button icon-edit" href="{{ route('admin.vehicles.edit', $vehicle) }}" aria-label="Edit vehicle" title="Edit vehicle"><x-admin.icon name="edit" /></a>
+                <a class="button secondary icon-button icon-back" href="{{ route('admin.vehicles.index') }}" aria-label="Back to vehicles" title="Back to vehicles"><x-admin.icon name="back" /></a>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
                         <strong>No vehicle images yet.</strong>
                         <p style="margin: 6px 0 0; color: var(--muted);">Use the upload modal to add a gallery without changing the vehicle form layout.</p>
                     </div>
-                    <button class="button" type="button" wire:click="openUploadModal">Add Images</button>
+                    <button class="button icon-button icon-upload" type="button" wire:click="openUploadModal" aria-label="Add images" title="Add images"><x-admin.icon name="upload" /></button>
                 </div>
             @else
                 <div class="vehicle-gallery">
@@ -50,9 +50,9 @@
                                 </div>
                                 <div class="table-actions">
                                     @if (! $image->is_primary)
-                                        <button class="button secondary" type="button" wire:click="setPrimaryImage({{ $image->id }})">Make Primary</button>
+                                        <button class="button secondary icon-button icon-star" type="button" wire:click="setPrimaryImage({{ $image->id }})" aria-label="Make primary image" title="Make primary image"><x-admin.icon name="star" /></button>
                                     @endif
-                                    <button class="button secondary" type="button" wire:click="deleteImage({{ $image->id }})" onclick="return confirm('Delete this vehicle image?')">Delete</button>
+                                    <button class="button secondary icon-button icon-delete" type="button" wire:click="deleteImage({{ $image->id }})" onclick="return confirm('Delete this vehicle image?')" aria-label="Delete image" title="Delete image"><x-admin.icon name="delete" /></button>
                                 </div>
                             </div>
                         </article>
@@ -64,7 +64,7 @@
         <div class="card-grid">
             <div class="card">
                 <h3>Status</h3>
-                <div><span class="badge">{{ $vehicle->status }}</span></div>
+                <div><span class="badge" data-status="{{ $vehicle->status }}">{{ $vehicle->status }}</span></div>
             </div>
             <div class="card">
                 <h3>Condition</h3>
@@ -77,6 +77,51 @@
             <div class="card">
                 <h3>Supplier</h3>
                 <div>{{ $vehicle->supplier?->business_name ?: '—' }}</div>
+            </div>
+            <div class="card">
+                <h3>Assigned Drivers</h3>
+                <div>{{ $vehicle->drivers->count() }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                <div>
+                    <h3 style="margin-bottom: 4px;">Assigned Drivers</h3>
+                    <p style="margin: 0; color: var(--muted);">Open the full driver record directly from this vehicle page.</p>
+                </div>
+                <span class="badge">{{ $vehicle->drivers->count() }} drivers</span>
+            </div>
+
+            <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Driver</th>
+                            <th>Phone Number</th>
+                            <th>License Number</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($vehicle->drivers as $driver)
+                            <tr>
+                                <td data-label="Driver">
+                                    <a href="{{ route('admin.drivers.show', $driver) }}" style="color: var(--accent); font-weight: 600;">
+                                        {{ $driver->driver_name }}
+                                    </a>
+                                </td>
+                                <td data-label="Phone Number">{{ $driver->phone_number }}</td>
+                                <td data-label="License Number">{{ $driver->license_number }}</td>
+                                <td data-label="Status"><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4">No drivers are assigned to this vehicle.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -133,7 +178,7 @@
                         <h3 id="vehicle-upload-title" style="margin: 0;">Upload Vehicle Images</h3>
                         <p style="margin: 6px 0 0; color: var(--muted);">Upload multiple JPG, PNG, or WebP images. If no cover image exists, the first uploaded image becomes the primary image.</p>
                     </div>
-                    <button class="button secondary" type="button" wire:click="closeUploadModal">Close</button>
+                    <button class="button secondary icon-button icon-close" type="button" wire:click="closeUploadModal" aria-label="Close upload modal" title="Close upload modal"><x-admin.icon name="close" /></button>
                 </div>
 
                 <form class="form-card" style="padding: 0; border: none; box-shadow: none; background: transparent; max-width: 100%;" wire:submit.prevent="uploadImages">
@@ -177,7 +222,7 @@
                         <h3 id="vehicle-preview-title" style="margin: 0;">Vehicle Image Preview</h3>
                         <p style="margin: 6px 0 0; color: var(--muted);">{{ $vehicle->vehicle_make }} {{ $vehicle->vehicle_model }} • {{ $vehicle->plate_number }}</p>
                     </div>
-                    <button class="button secondary" type="button" wire:click="closePreviewModal">Close</button>
+                    <button class="button secondary icon-button icon-close" type="button" wire:click="closePreviewModal" aria-label="Close preview modal" title="Close preview modal"><x-admin.icon name="close" /></button>
                 </div>
 
                 <div class="vehicle-preview-media">

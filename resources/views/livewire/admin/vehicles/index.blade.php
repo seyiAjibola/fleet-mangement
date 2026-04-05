@@ -92,12 +92,17 @@
                         <td data-label="Year">{{ $vehicle->vehicle_year }}</td>
                         <td data-label="Plate">{{ $vehicle->plate_number }}</td>
                         <td data-label="Fuel">{{ ucfirst($vehicle->fuel_type ?? '—') }}</td>
-                        <td data-label="Status"><span class="badge">{{ $vehicle->status }}</span></td>
+                        <td data-label="Status"><span class="badge" data-status="{{ $vehicle->status }}">{{ $vehicle->status }}</span></td>
                         <td>
                             <div class="table-actions">
-                                <a class="button secondary" href="{{ route('admin.vehicles.show', $vehicle) }}">View</a>
-                                <a class="button secondary" href="{{ route('admin.vehicles.edit', $vehicle) }}">Edit</a>
-                                <button class="button secondary" type="button" wire:click="delete({{ $vehicle->vehicle_id }})" onclick="return confirm('Delete this vehicle?')">Delete</button>
+                                <a class="button secondary icon-button icon-view" href="{{ route('admin.vehicles.show', $vehicle) }}" aria-label="View vehicle" title="View vehicle"><x-admin.icon name="view" /></a>
+                                <a class="button secondary icon-button icon-edit" href="{{ route('admin.vehicles.edit', $vehicle) }}" aria-label="Edit vehicle" title="Edit vehicle"><x-admin.icon name="edit" /></a>
+                                @if ($vehicle->status === 'available')
+                                    <button class="button secondary icon-button icon-cancel" type="button" wire:click="makeUnavailable({{ $vehicle->vehicle_id }})" onclick="return confirm('Mark this vehicle as unavailable?')" aria-label="Make vehicle unavailable" title="Make vehicle unavailable"><x-admin.icon name="cancel" /></button>
+                                @else
+                                    <button class="button secondary icon-button icon-confirm" type="button" wire:click="makeAvailable({{ $vehicle->vehicle_id }})" onclick="return confirm('Mark this vehicle as available?')" aria-label="Make vehicle available" title="Make vehicle available"><x-admin.icon name="confirm" /></button>
+                                @endif
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $vehicle->vehicle_id }})" onclick="return confirm('Delete this vehicle?')" aria-label="Delete vehicle" title="Delete vehicle"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>

@@ -24,7 +24,7 @@ class PasswordConfirmationTest extends TestCase
 
     public function test_password_can_be_confirmed(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->staff()->create();
 
         $this->actingAs($user);
 
@@ -34,7 +34,7 @@ class PasswordConfirmationTest extends TestCase
         $component->call('confirmPassword');
 
         $component
-            ->assertRedirect('/admin')
+            ->assertRedirect('/admin/suppliers')
             ->assertHasNoErrors();
     }
 

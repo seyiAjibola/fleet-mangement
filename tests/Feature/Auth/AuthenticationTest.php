@@ -22,7 +22,7 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
 
         $component = Volt::test('pages.auth.login')
             ->set('form.email', $user->email)
@@ -33,6 +33,23 @@ class AuthenticationTest extends TestCase
         $component
             ->assertHasNoErrors()
             ->assertRedirect(route('admin.dashboard', absolute: false));
+
+        $this->assertAuthenticated();
+    }
+
+    public function test_staff_users_are_redirected_to_the_standard_dashboard_after_login(): void
+    {
+        $user = User::factory()->staff()->create();
+
+        $component = Volt::test('pages.auth.login')
+            ->set('form.email', $user->email)
+            ->set('form.password', 'password');
+
+        $component->call('login');
+
+        $component
+            ->assertHasNoErrors()
+            ->assertRedirect(route('admin.suppliers.index', absolute: false));
 
         $this->assertAuthenticated();
     }

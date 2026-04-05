@@ -18,7 +18,7 @@ new #[Layout('layouts.guest')] class extends Component
     public function mount(): void
     {
         if (auth()->check()) {
-            $this->redirectRoute('admin.dashboard', navigate: true);
+            $this->redirectRoute(auth()->user()->homeRouteName(), navigate: true);
         }
     }
 
@@ -33,13 +33,14 @@ new #[Layout('layouts.guest')] class extends Component
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $validated['role'] = 'staff';
         $validated['password'] = Hash::make($validated['password']);
 
         event(new Registered($user = User::create($validated)));
 
         Auth::login($user);
 
-        $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
+        $this->redirect(route($user->homeRouteName(), absolute: false), navigate: true);
     }
 }; ?>
 

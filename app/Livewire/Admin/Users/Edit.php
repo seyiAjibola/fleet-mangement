@@ -15,6 +15,7 @@ class Edit extends Component
     public User $user;
     public string $name = '';
     public ?string $nin = null;
+    public string $role = 'staff';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -24,6 +25,7 @@ class Edit extends Component
         $this->user = $user;
         $this->name = $user->name;
         $this->nin = $user->nin;
+        $this->role = $user->role;
         $this->email = $user->email;
     }
 
@@ -32,6 +34,7 @@ class Edit extends Component
         return [
             'name' => ['required', 'string', 'max:255'],
             'nin' => ['nullable', 'string', 'max:255'],
+            'role' => ['required', 'string', 'in:admin,staff'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user->id],
             'password' => ['nullable', 'string', 'confirmed', Password::min(8)],
         ];
@@ -44,6 +47,7 @@ class Edit extends Component
         $data = [
             'name' => $validated['name'],
             'nin' => $validated['nin'],
+            'role' => $validated['role'],
             'email' => $validated['email'],
         ];
 

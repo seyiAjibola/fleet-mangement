@@ -82,14 +82,14 @@
 
         <div class="form-row">
             <label for="supplier_score">Supplier Score</label>
-            <input id="supplier_score" type="number" wire:model.defer="supplier_score" />
-            @error('supplier_score') <p class="text-red-500">{{ $message }}</p> @enderror
+            <input id="supplier_score" type="number" value="{{ $this->previewScore() }}" readonly />
+            <small style="color: var(--muted);">Score is calculated automatically from active status, compliance documents, website presence, social presence, years in business, and current fleet size.</small>
         </div>
 
         <div class="form-row">
             <label for="supplier_tier">Supplier Tier</label>
-            <input id="supplier_tier" type="text" wire:model.defer="supplier_tier" />
-            @error('supplier_tier') <p class="text-red-500">{{ $message }}</p> @enderror
+            <input id="supplier_tier" type="text" value="{{ ucfirst($this->previewTier()) }}" readonly />
+            <small style="color: var(--muted);">Tier is assigned automatically from supplier score, years in business, compliance documents, active status, and current fleet size.</small>
         </div>
 
         <div class="form-actions">

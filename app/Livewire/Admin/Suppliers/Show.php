@@ -15,7 +15,22 @@ class Show extends Component
 
     public function mount(Supplier $supplier): void
     {
-        $this->supplier = $supplier->loadCount('vehicles');
+        abort_unless($supplier->isVisibleTo(auth()->user()), 403);
+
+        $user = auth()->user();
+
+        $this->supplier = $supplier->loadCount('vehicles')
+            ->load([
+                'vehicles' => fn ($query) => $query
+                    ->visibleTo($user)
+                    ->with(['drivers' => fn ($driverQuery) => $driverQuery->visibleTo($user)->orderBy('driver_name')])
+                    ->orderBy('vehicle_make')
+                    ->orderBy('vehicle_model'),
+                'drivers' => fn ($query) => $query
+                    ->visibleTo($user)
+                    ->with('vehicle')
+                    ->orderBy('driver_name'),
+            ]);
     }
 
     public function render()

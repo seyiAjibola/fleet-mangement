@@ -60,7 +60,18 @@ class Create extends Component
         }
 
         $validated = $this->validate();
+        abort_unless(
+            ! $validated['assigned_vehicle']
+                || Vehicle::query()->visibleTo(auth()->user())->whereKey($validated['assigned_vehicle'])->exists(),
+            403
+        );
+        abort_unless(
+            ! $validated['assigned_driver']
+                || Driver::query()->visibleTo(auth()->user())->whereKey($validated['assigned_driver'])->exists(),
+            403
+        );
         $this->ensureAssignmentsAreAvailable($validated['assigned_vehicle'], $validated['assigned_driver']);
+        $validated['created_by_user_id'] = auth()->id();
 
         CustomerBooking::query()->create($validated);
 
@@ -201,6 +212,7 @@ class Create extends Component
             ->all();
 
         $vehiclesQuery = Vehicle::query()
+            ->visibleTo(auth()->user())
             ->where('status', 'available')
             ->orderBy('plate_number');
 
@@ -213,6 +225,7 @@ class Create extends Component
         }
 
         $driversQuery = Driver::query()
+            ->visibleTo(auth()->user())
             ->where('status', 'active')
             ->orderBy('driver_name');
 

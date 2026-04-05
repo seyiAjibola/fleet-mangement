@@ -8,15 +8,15 @@
                 <p style="margin: 6px 0 0; color: var(--muted);">{{ $booking->pickup_location }} to {{ $booking->dropoff_location }}</p>
             </div>
             <div class="table-actions">
-                <a class="button secondary" href="{{ route('admin.bookings.edit', $booking) }}">Edit Booking</a>
-                <a class="button secondary" href="{{ route('admin.bookings.index') }}">Back to Bookings</a>
+                <a class="button secondary icon-button icon-edit" href="{{ route('admin.bookings.edit', $booking) }}" aria-label="Edit booking" title="Edit booking"><x-admin.icon name="edit" /></a>
+                <a class="button secondary icon-button icon-back" href="{{ route('admin.bookings.index') }}" aria-label="Back to bookings" title="Back to bookings"><x-admin.icon name="back" /></a>
             </div>
         </div>
 
         <div class="card-grid">
             <div class="card">
                 <h3>Status</h3>
-                <div><span class="badge">{{ $booking->status }}</span></div>
+                <div><span class="badge" data-status="{{ $booking->status }}">{{ $booking->status }}</span></div>
             </div>
             <div class="card">
                 <h3>Vehicle Category</h3>

@@ -23,7 +23,13 @@ class Show extends Component
 
     public function mount(Vehicle $vehicle): void
     {
-        $this->vehicle = $vehicle->load(['supplier', 'images']);
+        abort_unless($vehicle->isVisibleTo(auth()->user()), 403);
+
+        $this->vehicle = $vehicle->load([
+            'supplier',
+            'images',
+            'drivers' => fn ($query) => $query->visibleTo(auth()->user())->orderBy('driver_name'),
+        ]);
         $this->showUploadModal = (bool) session('open_vehicle_upload_modal', false);
     }
 
@@ -76,7 +82,11 @@ class Show extends Component
             }
         });
 
-        $this->vehicle->load(['supplier', 'images']);
+        $this->vehicle->load([
+            'supplier',
+            'images',
+            'drivers' => fn ($query) => $query->visibleTo(auth()->user())->orderBy('driver_name'),
+        ]);
         $this->closeUploadModal();
         session()->flash('success', 'Vehicle images uploaded.');
     }
@@ -90,7 +100,11 @@ class Show extends Component
             $image->update(['is_primary' => true]);
         });
 
-        $this->vehicle->load(['supplier', 'images']);
+        $this->vehicle->load([
+            'supplier',
+            'images',
+            'drivers' => fn ($query) => $query->visibleTo(auth()->user())->orderBy('driver_name'),
+        ]);
         session()->flash('success', 'Primary vehicle image updated.');
     }
 
@@ -110,7 +124,11 @@ class Show extends Component
             }
         }
 
-        $this->vehicle->load(['supplier', 'images']);
+        $this->vehicle->load([
+            'supplier',
+            'images',
+            'drivers' => fn ($query) => $query->visibleTo(auth()->user())->orderBy('driver_name'),
+        ]);
         session()->flash('success', 'Vehicle image deleted.');
     }
 

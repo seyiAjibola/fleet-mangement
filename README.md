@@ -38,6 +38,8 @@ The app is built for internal staff use. After login, users are redirected to th
 
 - Create, edit, view, and delete suppliers.
 - Track company name, contact person, contact number, CAC No, TIN, city, and address.
+- Enter a manual supplier score used for supplier grading.
+- Automatically assign supplier tier based on supplier score, years in business, compliance details, active status, and fleet size.
 - Filter suppliers by company name, contact person, contact number, number of cars, location/address, CAC No, TIN, and status.
 
 ### Vehicles
@@ -65,6 +67,65 @@ The app is built for internal staff use. After login, users are redirected to th
 
 - View charts for booking sources, vehicle categories, and supplier tiers.
 - Export report data as CSV.
+- View supplier-specific and staff-specific operational reports.
+
+## Supplier Grading
+
+The project currently treats `supplier_score` and `supplier_tier` differently:
+
+- `supplier_score` is manual.
+  Staff or admins enter it directly in the supplier form.
+  There is no automatic score calculation in the current codebase.
+- `supplier_tier` is automatic.
+  The application calculates it from supplier data and fleet size.
+
+### Supplier Score
+
+`supplier_score` is now calculated automatically by the application.
+
+The current scoring rule is capped at `100` and is based on fields already present in this project:
+
+- `+20` if supplier status is `active`
+- `+15` if `CAC No` is present
+- `+15` if `TIN` is present
+- `+10` if `website` is present
+- `+5` if `instagram_page` is present
+- experience score:
+  `+20` for `10+` years in business
+  `+15` for `5+` years
+  `+10` for `2+` years
+  `+5` for `1+` year
+- fleet size score:
+  `+15` for `10+` vehicles
+  `+10` for `5+` vehicles
+  `+8` for `3+` vehicles
+  `+5` for `1+` vehicle
+
+Practical implication:
+
+- Staff and admins no longer type supplier score manually.
+- The score updates automatically when supplier details or fleet size change.
+
+### Supplier Tier Logic
+
+The application currently assigns supplier tiers with this rule:
+
+- `gold`
+  Supplier is `active`, `supplier_score >= 80`, `years_in_business >= 5`, both `CAC No` and `TIN` are present, and the supplier has at least `3` vehicles.
+- `silver`
+  Supplier is `active`, `supplier_score >= 50`, `years_in_business >= 2`, and at least one compliance document exists: `CAC No` or `TIN`.
+- `bronze`
+  Any supplier that does not meet the `gold` or `silver` rule.
+
+### When Tier Recalculates
+
+Supplier tier is recalculated when:
+
+- a supplier is created
+- a supplier is edited
+- a vehicle is added to a supplier
+- a vehicle is moved to a different supplier
+- a vehicle is deleted
 
 ## Technology
 
@@ -111,6 +172,32 @@ If your local database is older, run:
 ```bash
 php artisan migrate
 ```
+
+## Upgrade Checklist
+
+If you are updating an existing local or deployed copy of the project:
+
+1. Pull the latest code.
+2. Run database migrations.
+3. Recreate the storage symlink if needed.
+4. Clear cached Laravel state if the environment was previously cached.
+5. Verify role-based access and supplier grading behavior.
+
+Recommended commands:
+
+```bash
+php artisan migrate
+php artisan storage:link
+php artisan optimize:clear
+```
+
+After upgrade, verify:
+
+- existing users still sign in correctly
+- admin users can access `Users` and `Reports`
+- staff users land on `/admin/suppliers`
+- supplier score and supplier tier display automatically
+- vehicle images still load from `/storage/...`
 
 ## Testing
 

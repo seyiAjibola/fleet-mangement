@@ -92,7 +92,7 @@ class Index extends Component
     public function delete(int $id): void
     {
         try {
-            CustomerBooking::query()->whereKey($id)->delete();
+            CustomerBooking::query()->visibleTo(auth()->user())->whereKey($id)->delete();
             session()->flash('success', 'Booking deleted.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Unable to delete booking.');
@@ -119,7 +119,7 @@ class Index extends Component
     private function updateStatus(int $id, string $status): void
     {
         try {
-            CustomerBooking::query()->whereKey($id)->update(['status' => $status]);
+            CustomerBooking::query()->visibleTo(auth()->user())->whereKey($id)->update(['status' => $status]);
             session()->flash('success', 'Booking status updated.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Unable to update booking status.');
@@ -134,6 +134,7 @@ class Index extends Component
 
         return view('livewire.admin.bookings.index', [
             'bookings' => CustomerBooking::query()
+                ->visibleTo(auth()->user())
                 ->when($this->search !== '', function ($query) {
                     $query->where(function ($inner) {
                         $inner->where('customer_name', 'like', '%' . $this->search . '%')

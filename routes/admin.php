@@ -30,10 +30,14 @@ Route::middleware(['auth'])
     ->group(function () {
         Route::get('/', DashboardIndex::class)->name('dashboard');
 
-        Route::get('users', UsersIndex::class)->name('users.index');
-        Route::get('users/create', UsersCreate::class)->name('users.create');
-        Route::get('users/{user}', UsersShow::class)->name('users.show');
-        Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
+        Route::middleware('admin')->group(function () {
+            Route::get('users', UsersIndex::class)->name('users.index');
+            Route::get('users/create', UsersCreate::class)->name('users.create');
+            Route::get('users/{user}', UsersShow::class)->name('users.show');
+            Route::get('users/{user}/edit', UsersEdit::class)->name('users.edit');
+
+            Route::get('reports', ReportsIndex::class)->name('reports.index');
+        });
 
         Route::get('suppliers', SuppliersIndex::class)->name('suppliers.index');
         Route::get('suppliers/create', SuppliersCreate::class)->name('suppliers.create');
@@ -54,6 +58,4 @@ Route::middleware(['auth'])
         Route::get('customer-bookings/create', BookingsCreate::class)->name('bookings.create');
         Route::get('customer-bookings/{booking}', BookingsShow::class)->name('bookings.show');
         Route::get('customer-bookings/{booking}/edit', BookingsEdit::class)->name('bookings.edit');
-
-        Route::get('reports', ReportsIndex::class)->name('reports.index');
     });

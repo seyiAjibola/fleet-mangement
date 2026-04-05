@@ -40,10 +40,32 @@ class Index extends Component
     public function delete(int $id): void
     {
         try {
-            Driver::query()->whereKey($id)->delete();
+            Driver::query()->visibleTo(auth()->user())->whereKey($id)->delete();
             session()->flash('success', 'Driver deleted.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Unable to delete driver.');
+        }
+
+        $this->resetPage();
+    }
+
+    public function activate(int $id): void
+    {
+        $this->updateStatus($id, 'active');
+    }
+
+    public function deactivate(int $id): void
+    {
+        $this->updateStatus($id, 'inactive');
+    }
+
+    private function updateStatus(int $id, string $status): void
+    {
+        try {
+            Driver::query()->visibleTo(auth()->user())->whereKey($id)->update(['status' => $status]);
+            session()->flash('success', 'Driver status updated.');
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unable to update driver status.');
         }
 
         $this->resetPage();
@@ -53,6 +75,7 @@ class Index extends Component
     {
         return view('livewire.admin.drivers.index', [
             'drivers' => Driver::query()
+                ->visibleTo(auth()->user())
                 ->when($this->search !== '', function ($query) {
                     $query->where(function ($inner) {
                         $inner->where('driver_name', 'like', '%' . $this->search . '%')

@@ -24,8 +24,6 @@ class Create extends Component
     public ?string $instagram_page = null;
     public ?string $website = null;
     public string $status = 'active';
-    public int $supplier_score = 0;
-    public ?string $supplier_tier = null;
 
     protected function rules(): array
     {
@@ -43,18 +41,48 @@ class Create extends Component
             'instagram_page' => ['nullable', 'string', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'string', 'max:255'],
-            'supplier_score' => ['required', 'integer', 'min:0'],
-            'supplier_tier' => ['nullable', 'string', 'max:255'],
         ];
     }
 
     public function save(): void
     {
         $validated = $this->validate();
+        $validated['created_by_user_id'] = auth()->id();
+        $supplier = new Supplier($validated);
+        $validated['supplier_score'] = $supplier->determineScore(0);
+        $validated['supplier_tier'] = $supplier->determineTier(0);
 
         Supplier::query()->create($validated);
 
         $this->redirectRoute('admin.suppliers.index');
+    }
+
+    public function previewScore(): int
+    {
+        $supplier = new Supplier([
+            'cac_no' => $this->cac_no,
+            'tin' => $this->tin,
+            'status' => $this->status,
+            'years_in_business' => $this->years_in_business,
+            'website' => $this->website,
+            'instagram_page' => $this->instagram_page,
+        ]);
+
+        return $supplier->determineScore(0);
+    }
+
+    public function previewTier(): string
+    {
+        $supplier = new Supplier([
+            'cac_no' => $this->cac_no,
+            'tin' => $this->tin,
+            'status' => $this->status,
+            'years_in_business' => $this->years_in_business,
+            'website' => $this->website,
+            'instagram_page' => $this->instagram_page,
+        ]);
+
+        return $supplier->determineTier(0);
     }
 
     public function render()

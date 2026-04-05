@@ -29,6 +29,8 @@ class Edit extends Component
 
     public function mount(Vehicle $vehicle): void
     {
+        abort_unless($vehicle->isVisibleTo(auth()->user()), 403);
+
         $this->vehicle = $vehicle;
         $this->supplier_id = (int) $vehicle->supplier_id;
         $this->vehicle_make = $vehicle->vehicle_make;
@@ -67,16 +69,31 @@ class Edit extends Component
     public function save(): void
     {
         $validated = $this->validate();
+        abort_unless(
+            Supplier::query()->visibleTo(auth()->user())->whereKey($validated['supplier_id'])->exists(),
+            403
+        );
+        $previousSupplierId = (int) $this->vehicle->supplier_id;
 
         $this->vehicle->update($validated);
+        $this->vehicle->refresh();
+        $this->vehicle->supplier?->syncTier();
+
+        if ($previousSupplierId !== (int) $this->vehicle->supplier_id) {
+            Supplier::query()->find($previousSupplierId)?->syncTier();
+        }
 
         $this->redirectRoute('admin.vehicles.index');
     }
 
     public function render()
     {
+        $suppliersQuery = Supplier::query()
+            ->visibleTo(auth()->user())
+            ->orderBy('business_name');
+
         return view('livewire.admin.vehicles.edit', [
-            'suppliers' => Supplier::query()->orderBy('business_name')->get(['supplier_id', 'business_name']),
+            'suppliers' => $suppliersQuery->get(['supplier_id', 'business_name']),
         ]);
     }
 }

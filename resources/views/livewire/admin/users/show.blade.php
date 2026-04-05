@@ -8,12 +8,16 @@
                 <p style="margin: 6px 0 0; color: var(--muted);">{{ $user->email }}</p>
             </div>
             <div class="table-actions">
-                <a class="button secondary" href="{{ route('admin.users.edit', $user) }}">Edit User</a>
-                <a class="button secondary" href="{{ route('admin.users.index') }}">Back to Users</a>
+                <a class="button secondary icon-button icon-edit" href="{{ route('admin.users.edit', $user) }}" aria-label="Edit user" title="Edit user"><x-admin.icon name="edit" /></a>
+                <a class="button secondary icon-button icon-back" href="{{ route('admin.users.index') }}" aria-label="Back to users" title="Back to users"><x-admin.icon name="back" /></a>
             </div>
         </div>
 
         <div class="card-grid">
+            <div class="card">
+                <h3>Role</h3>
+                <div>{{ ucfirst($user->role) }}</div>
+            </div>
             <div class="card">
                 <h3>Email Verification</h3>
                 <div>{{ $user->email_verified_at ? 'Verified' : 'Not Verified' }}</div>
@@ -42,6 +46,10 @@
                     <tr>
                         <th>NIN</th>
                         <td>{{ $user->nin ?: '—' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Role</th>
+                        <td>{{ ucfirst($user->role) }}</td>
                     </tr>
                     <tr>
                         <th>Email</th>

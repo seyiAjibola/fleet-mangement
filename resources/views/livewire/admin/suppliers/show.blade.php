@@ -8,8 +8,8 @@
                 <p style="margin: 6px 0 0; color: var(--muted);">{{ $supplier->business_type }}</p>
             </div>
             <div class="table-actions">
-                <a class="button secondary" href="{{ route('admin.suppliers.edit', $supplier) }}">Edit Supplier</a>
-                <a class="button secondary" href="{{ route('admin.suppliers.index') }}">Back to Suppliers</a>
+                <a class="button secondary icon-button icon-edit" href="{{ route('admin.suppliers.edit', $supplier) }}" aria-label="Edit supplier" title="Edit supplier"><x-admin.icon name="edit" /></a>
+                <a class="button secondary icon-button icon-back" href="{{ route('admin.suppliers.index') }}" aria-label="Back to suppliers" title="Back to suppliers"><x-admin.icon name="back" /></a>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
             </div>
             <div class="card">
                 <h3>Status</h3>
-                <div><span class="badge">{{ $supplier->status }}</span></div>
+                <div><span class="badge" data-status="{{ $supplier->status }}">{{ $supplier->status }}</span></div>
             </div>
         </div>
 
@@ -77,6 +77,107 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                <div>
+                    <h3 style="margin-bottom: 4px;">Vehicles Under Supplier</h3>
+                    <p style="margin: 0; color: var(--muted);">Open a vehicle record directly from the supplier profile and review any assigned drivers.</p>
+                </div>
+                <span class="badge">{{ $supplier->vehicles->count() }} vehicles</span>
+            </div>
+
+            <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Plate Number</th>
+                            <th>Category</th>
+                            <th>Drivers</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($supplier->vehicles as $vehicle)
+                            <tr>
+                                <td data-label="Vehicle">
+                                    <a href="{{ route('admin.vehicles.show', $vehicle) }}" style="color: var(--accent); font-weight: 600;">
+                                        {{ $vehicle->vehicle_make }} {{ $vehicle->vehicle_model }}
+                                    </a>
+                                </td>
+                                <td data-label="Plate Number">{{ $vehicle->plate_number }}</td>
+                                <td data-label="Category">{{ $vehicle->vehicle_category }}</td>
+                                <td data-label="Drivers">
+                                    @if ($vehicle->drivers->isEmpty())
+                                        —
+                                    @else
+                                        {{ $vehicle->drivers->pluck('driver_name')->join(', ') }}
+                                    @endif
+                                </td>
+                                <td data-label="Status"><span class="badge" data-status="{{ $vehicle->status }}">{{ $vehicle->status }}</span></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No vehicles found for this supplier.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                <div>
+                    <h3 style="margin-bottom: 4px;">Drivers Under Supplier</h3>
+                    <p style="margin: 0; color: var(--muted);">Open a driver record directly from the supplier profile and review their assigned vehicle.</p>
+                </div>
+                <span class="badge">{{ $supplier->drivers->count() }} drivers</span>
+            </div>
+
+            <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Driver</th>
+                            <th>Phone Number</th>
+                            <th>License Number</th>
+                            <th>Assigned Vehicle</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($supplier->drivers as $driver)
+                            <tr>
+                                <td data-label="Driver">
+                                    <a href="{{ route('admin.drivers.show', $driver) }}" style="color: var(--accent); font-weight: 600;">
+                                        {{ $driver->driver_name }}
+                                    </a>
+                                </td>
+                                <td data-label="Phone Number">{{ $driver->phone_number }}</td>
+                                <td data-label="License Number">{{ $driver->license_number }}</td>
+                                <td data-label="Assigned Vehicle">
+                                    @if ($driver->vehicle)
+                                        <a href="{{ route('admin.vehicles.show', $driver->vehicle) }}" style="color: var(--accent); font-weight: 600;">
+                                            {{ $driver->vehicle->vehicle_make }} {{ $driver->vehicle->vehicle_model }}
+                                        </a>
+                                        <div style="color: var(--muted); font-size: 0.9rem;">{{ $driver->vehicle->plate_number }}</div>
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td data-label="Status"><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No drivers found for this supplier.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>

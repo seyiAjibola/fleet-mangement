@@ -29,8 +29,9 @@ class RegistrationTest extends TestCase
 
         $component->call('register');
 
-        $component->assertRedirect(route('admin.dashboard', absolute: false));
+        $component->assertRedirect(route('admin.suppliers.index', absolute: false));
 
         $this->assertAuthenticated();
+        $this->assertSame('staff', auth()->user()->role);
     }
 }

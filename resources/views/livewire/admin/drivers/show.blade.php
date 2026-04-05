@@ -8,15 +8,15 @@
                 <p style="margin: 6px 0 0; color: var(--muted);">{{ $driver->license_number }}</p>
             </div>
             <div class="table-actions">
-                <a class="button secondary" href="{{ route('admin.drivers.edit', $driver) }}">Edit Driver</a>
-                <a class="button secondary" href="{{ route('admin.drivers.index') }}">Back to Drivers</a>
+                <a class="button secondary icon-button icon-edit" href="{{ route('admin.drivers.edit', $driver) }}" aria-label="Edit driver" title="Edit driver"><x-admin.icon name="edit" /></a>
+                <a class="button secondary icon-button icon-back" href="{{ route('admin.drivers.index') }}" aria-label="Back to drivers" title="Back to drivers"><x-admin.icon name="back" /></a>
             </div>
         </div>
 
         <div class="card-grid">
             <div class="card">
                 <h3>Status</h3>
-                <div><span class="badge">{{ $driver->status }}</span></div>
+                <div><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></div>
             </div>
             <div class="card">
                 <h3>Supplier</h3>

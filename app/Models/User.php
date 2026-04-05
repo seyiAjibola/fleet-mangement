@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'nin',
+        'role',
         'email',
         'password',
     ];
@@ -46,5 +48,35 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function homeRouteName(): string
+    {
+        return $this->isAdmin() ? 'admin.dashboard' : 'admin.suppliers.index';
+    }
+
+    public function suppliers(): HasMany
+    {
+        return $this->hasMany(Supplier::class, 'created_by_user_id');
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'created_by_user_id');
+    }
+
+    public function drivers(): HasMany
+    {
+        return $this->hasMany(Driver::class, 'created_by_user_id');
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(CustomerBooking::class, 'created_by_user_id', 'id');
     }
 }

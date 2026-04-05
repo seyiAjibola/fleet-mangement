@@ -15,6 +15,8 @@ class Show extends Component
 
     public function mount(CustomerBooking $booking): void
     {
+        abort_unless($booking->isVisibleTo(auth()->user()), 403);
+
         $this->booking = $booking->load(['vehicle', 'driver']);
     }
 

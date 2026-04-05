@@ -35,6 +35,8 @@ class Edit extends Component
 
     public function mount(CustomerBooking $booking): void
     {
+        abort_unless($booking->isVisibleTo(auth()->user()), 403);
+
         $this->booking = $booking;
         $this->customer_name = $booking->customer_name;
         $this->customer_phone = $booking->customer_phone;
@@ -78,6 +80,16 @@ class Edit extends Component
         }
 
         $validated = $this->validate();
+        abort_unless(
+            ! $validated['assigned_vehicle']
+                || Vehicle::query()->visibleTo(auth()->user())->whereKey($validated['assigned_vehicle'])->exists(),
+            403
+        );
+        abort_unless(
+            ! $validated['assigned_driver']
+                || Driver::query()->visibleTo(auth()->user())->whereKey($validated['assigned_driver'])->exists(),
+            403
+        );
         $this->ensureAssignmentsAreAvailable($validated['assigned_vehicle'], $validated['assigned_driver']);
 
         $this->booking->update($validated);
@@ -220,6 +232,7 @@ class Edit extends Component
             ->all();
 
         $vehiclesQuery = Vehicle::query()
+            ->visibleTo(auth()->user())
             ->where('status', 'available')
             ->orderBy('plate_number');
 
@@ -232,6 +245,7 @@ class Edit extends Component
         }
 
         $driversQuery = Driver::query()
+            ->visibleTo(auth()->user())
             ->where('status', 'active')
             ->orderBy('driver_name');
 

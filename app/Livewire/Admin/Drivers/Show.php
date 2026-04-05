@@ -15,6 +15,8 @@ class Show extends Component
 
     public function mount(Driver $driver): void
     {
+        abort_unless($driver->isVisibleTo(auth()->user()), 403);
+
         $this->driver = $driver->load(['supplier', 'vehicle']);
     }
 

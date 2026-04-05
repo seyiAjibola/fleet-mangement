@@ -106,10 +106,38 @@ class Index extends Component
     public function delete(int $id): void
     {
         try {
-            Vehicle::query()->whereKey($id)->delete();
+            $vehicle = Vehicle::query()->visibleTo(auth()->user())->find($id);
+
+            if ($vehicle) {
+                $supplier = $vehicle->supplier;
+                $vehicle->delete();
+                $supplier?->syncTier();
+            }
             session()->flash('success', 'Vehicle deleted.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Unable to delete vehicle.');
+        }
+
+        $this->resetPage();
+    }
+
+    public function makeAvailable(int $id): void
+    {
+        $this->updateStatus($id, 'available');
+    }
+
+    public function makeUnavailable(int $id): void
+    {
+        $this->updateStatus($id, 'unavailable');
+    }
+
+    private function updateStatus(int $id, string $status): void
+    {
+        try {
+            Vehicle::query()->visibleTo(auth()->user())->whereKey($id)->update(['status' => $status]);
+            session()->flash('success', 'Vehicle status updated.');
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Unable to update vehicle status.');
         }
 
         $this->resetPage();
@@ -119,6 +147,7 @@ class Index extends Component
     {
         return view('livewire.admin.vehicles.index', [
             'vehicles' => Vehicle::query()
+                ->visibleTo(auth()->user())
                 ->when($this->vehicleType !== '', fn ($query) => $query->where('vehicle_category', $this->vehicleType))
                 ->when($this->vehicleMake !== '', fn ($query) => $query->where('vehicle_make', 'like', '%' . $this->vehicleMake . '%'))
                 ->when($this->vehicleModel !== '', fn ($query) => $query->where('vehicle_model', 'like', '%' . $this->vehicleModel . '%'))

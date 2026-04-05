@@ -98,7 +98,7 @@ class Index extends Component
     public function delete(int $id): void
     {
         try {
-            Supplier::query()->whereKey($id)->delete();
+            Supplier::query()->visibleTo(auth()->user())->whereKey($id)->delete();
             session()->flash('success', 'Supplier deleted.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Unable to delete supplier.');
@@ -111,6 +111,7 @@ class Index extends Component
     {
         return view('livewire.admin.suppliers.index', [
             'suppliers' => Supplier::query()
+                ->visibleTo(auth()->user())
                 ->withCount('vehicles')
                 ->when($this->companyName !== '', fn ($query) => $query->where('business_name', 'like', '%' . $this->companyName . '%'))
                 ->when($this->contactPerson !== '', fn ($query) => $query->where('contact_person', 'like', '%' . $this->contactPerson . '%'))

@@ -25,11 +25,11 @@ class Edit extends Component
     public ?string $instagram_page = null;
     public ?string $website = null;
     public string $status = 'active';
-    public int $supplier_score = 0;
-    public ?string $supplier_tier = null;
 
     public function mount(Supplier $supplier): void
     {
+        abort_unless($supplier->isVisibleTo(auth()->user()), 403);
+
         $this->supplier = $supplier;
         $this->business_name = $supplier->business_name;
         $this->business_type = $supplier->business_type;
@@ -44,8 +44,6 @@ class Edit extends Component
         $this->instagram_page = $supplier->instagram_page;
         $this->website = $supplier->website;
         $this->status = $supplier->status;
-        $this->supplier_score = (int) $supplier->supplier_score;
-        $this->supplier_tier = $supplier->supplier_tier;
     }
 
     protected function rules(): array
@@ -64,18 +62,47 @@ class Edit extends Component
             'instagram_page' => ['nullable', 'string', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'string', 'max:255'],
-            'supplier_score' => ['required', 'integer', 'min:0'],
-            'supplier_tier' => ['nullable', 'string', 'max:255'],
         ];
     }
 
     public function save(): void
     {
         $validated = $this->validate();
+        $supplierPreview = new Supplier(array_merge($this->supplier->only(['supplier_id']), $validated));
+        $validated['supplier_score'] = $supplierPreview->determineScore($this->supplier->vehicles()->count());
+        $validated['supplier_tier'] = $supplierPreview->determineTier($this->supplier->vehicles()->count());
 
         $this->supplier->update($validated);
 
         $this->redirectRoute('admin.suppliers.index');
+    }
+
+    public function previewScore(): int
+    {
+        $supplier = new Supplier([
+            'cac_no' => $this->cac_no,
+            'tin' => $this->tin,
+            'status' => $this->status,
+            'years_in_business' => $this->years_in_business,
+            'website' => $this->website,
+            'instagram_page' => $this->instagram_page,
+        ]);
+
+        return $supplier->determineScore($this->supplier->vehicles()->count());
+    }
+
+    public function previewTier(): string
+    {
+        $supplier = new Supplier([
+            'cac_no' => $this->cac_no,
+            'tin' => $this->tin,
+            'status' => $this->status,
+            'years_in_business' => $this->years_in_business,
+            'website' => $this->website,
+            'instagram_page' => $this->instagram_page,
+        ]);
+
+        return $supplier->determineTier($this->supplier->vehicles()->count());
     }
 
     public function render()

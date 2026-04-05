@@ -18,54 +18,77 @@
         <button class="button secondary" type="button" wire:click="exportVehicleStatus">Export Vehicle Status</button>
     </div>
 
-    <div class="card-grid">
-        <div class="card">
-            <h3>Users</h3>
-            <div class="metric">{{ $userCount }}</div>
+    <div style="display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr); gap: 24px; align-items: start;">
+        <div>
+            <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                @if ($isAdmin)
+                    <div class="card">
+                        <h3>Users</h3>
+                        <div class="metric">{{ $userCount }}</div>
+                    </div>
+                @endif
+                <div class="card">
+                    <h3>Suppliers</h3>
+                    <div class="metric">{{ $supplierCount }}</div>
+                </div>
+                <div class="card">
+                    <h3>Vehicles</h3>
+                    <div class="metric">{{ $vehicleCount }}</div>
+                </div>
+                <div class="card">
+                    <h3>Drivers</h3>
+                    <div class="metric">{{ $driverCount }}</div>
+                </div>
+                <div class="card">
+                    <h3>Bookings</h3>
+                    <div class="metric">{{ $bookingCount }}</div>
+                </div>
+                <div class="card">
+                    <h3>Pending Bookings</h3>
+                    <div class="metric">{{ $pendingBookings }}</div>
+                </div>
+                <div class="card">
+                    <h3>Confirmed Bookings</h3>
+                    <div class="metric">{{ $confirmedBookings }}</div>
+                </div>
+                <div class="card">
+                    <h3>Rejected Bookings</h3>
+                    <div class="metric">{{ $rejectedBookings }}</div>
+                </div>
+                <div class="card">
+                    <h3>Canceled Bookings</h3>
+                    <div class="metric">{{ $canceledBookings }}</div>
+                </div>
+                <div class="card">
+                    <h3>Available Vehicles</h3>
+                    <div class="metric">{{ $availableVehicles }}</div>
+                </div>
+            </div>
         </div>
-        <div class="card">
-            <h3>Suppliers</h3>
-            <div class="metric">{{ $supplierCount }}</div>
-        </div>
-        <div class="card">
-            <h3>Vehicles</h3>
-            <div class="metric">{{ $vehicleCount }}</div>
-        </div>
-        <div class="card">
-            <h3>Drivers</h3>
-            <div class="metric">{{ $driverCount }}</div>
-        </div>
-        <div class="card">
-            <h3>Bookings</h3>
-            <div class="metric">{{ $bookingCount }}</div>
+
+        <div style="display: grid; gap: 18px;">
+            <div class="card chart-card" wire:ignore>
+                <h3>Bookings by Status</h3>
+                <div class="chart-wrap">
+                    <canvas id="bookingStatusChart"></canvas>
+                </div>
+            </div>
+            <div class="card chart-card" wire:ignore>
+                <h3>Vehicles by Status</h3>
+                <div class="chart-wrap">
+                    <canvas id="vehicleStatusChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card-grid" style="margin-top: 18px;">
-        <div class="card">
-            <h3>Pending Bookings</h3>
-            <div class="metric">{{ $pendingBookings }}</div>
-        </div>
-        <div class="card">
-            <h3>Available Vehicles</h3>
-            <div class="metric">{{ $availableVehicles }}</div>
-        </div>
-    </div>
-
-    <div class="card-grid" style="margin-top: 24px;">
-        <div class="card chart-card" wire:ignore>
-            <h3>Bookings by Status</h3>
-            <div class="chart-wrap">
-                <canvas id="bookingStatusChart"></canvas>
-            </div>
-        </div>
-        <div class="card chart-card" wire:ignore>
-            <h3>Vehicles by Status</h3>
-            <div class="chart-wrap">
-                <canvas id="vehicleStatusChart"></canvas>
-            </div>
-        </div>
-    </div>
+    <style>
+        @media (max-width: 960px) {
+            section > div[style*='grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr)'] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </section>
 
 <script>

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CustomerBooking extends Model
 {
+    use OwnedByUser;
+
     protected $primaryKey = 'booking_id';
 
     protected $fillable = [
+        'created_by_user_id',
         'customer_name',
         'customer_phone',
         'pickup_location',

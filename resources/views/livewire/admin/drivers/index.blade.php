@@ -38,12 +38,17 @@
                         <td data-label="Name">{{ $driver->driver_name }}</td>
                         <td data-label="Phone">{{ $driver->phone_number }}</td>
                         <td data-label="License">{{ $driver->license_number }}</td>
-                        <td data-label="Status"><span class="badge">{{ $driver->status }}</span></td>
+                        <td data-label="Status"><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></td>
                         <td>
                             <div class="table-actions">
-                                <a class="button secondary" href="{{ route('admin.drivers.show', $driver) }}">View</a>
-                                <a class="button secondary" href="{{ route('admin.drivers.edit', $driver) }}">Edit</a>
-                                <button class="button secondary" type="button" wire:click="delete({{ $driver->driver_id }})" onclick="return confirm('Delete this driver?')">Delete</button>
+                                <a class="button secondary icon-button icon-view" href="{{ route('admin.drivers.show', $driver) }}" aria-label="View driver" title="View driver"><x-admin.icon name="view" /></a>
+                                <a class="button secondary icon-button icon-edit" href="{{ route('admin.drivers.edit', $driver) }}" aria-label="Edit driver" title="Edit driver"><x-admin.icon name="edit" /></a>
+                                @if ($driver->status === 'active')
+                                    <button class="button secondary icon-button icon-cancel" type="button" wire:click="deactivate({{ $driver->driver_id }})" onclick="return confirm('Make this driver inactive?')" aria-label="Make driver inactive" title="Make driver inactive"><x-admin.icon name="cancel" /></button>
+                                @else
+                                    <button class="button secondary icon-button icon-confirm" type="button" wire:click="activate({{ $driver->driver_id }})" onclick="return confirm('Make this driver active?')" aria-label="Make driver active" title="Make driver active"><x-admin.icon name="confirm" /></button>
+                                @endif
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $driver->driver_id }})" onclick="return confirm('Delete this driver?')" aria-label="Delete driver" title="Delete driver"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>

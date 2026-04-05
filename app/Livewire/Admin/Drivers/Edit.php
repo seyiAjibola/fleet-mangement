@@ -26,6 +26,8 @@ class Edit extends Component
 
     public function mount(Driver $driver): void
     {
+        abort_unless($driver->isVisibleTo(auth()->user()), 403);
+
         $this->driver = $driver;
         $this->supplier_id = (int) $driver->supplier_id;
         $this->vehicle_id = (int) $driver->vehicle_id;
@@ -56,6 +58,14 @@ class Edit extends Component
     public function save(): void
     {
         $validated = $this->validate();
+        abort_unless(
+            Supplier::query()->visibleTo(auth()->user())->whereKey($validated['supplier_id'])->exists(),
+            403
+        );
+        abort_unless(
+            Vehicle::query()->visibleTo(auth()->user())->whereKey($validated['vehicle_id'])->exists(),
+            403
+        );
 
         $this->driver->update($validated);
 
@@ -64,9 +74,17 @@ class Edit extends Component
 
     public function render()
     {
+        $suppliersQuery = Supplier::query()
+            ->visibleTo(auth()->user())
+            ->orderBy('business_name');
+
+        $vehiclesQuery = Vehicle::query()
+            ->visibleTo(auth()->user())
+            ->orderBy('plate_number');
+
         return view('livewire.admin.drivers.edit', [
-            'suppliers' => Supplier::query()->orderBy('business_name')->get(['supplier_id', 'business_name']),
-            'vehicles' => Vehicle::query()->orderBy('plate_number')->get(['vehicle_id', 'plate_number']),
+            'suppliers' => $suppliersQuery->get(['supplier_id', 'business_name']),
+            'vehicles' => $vehiclesQuery->get(['vehicle_id', 'plate_number']),
         ]);
     }
 }

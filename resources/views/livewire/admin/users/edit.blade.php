@@ -15,6 +15,15 @@
         </div>
 
         <div class="form-row">
+            <label for="role">Role</label>
+            <select id="role" wire:model.defer="role">
+                <option value="staff">Staff</option>
+                <option value="admin">Admin</option>
+            </select>
+            @error('role') <p class="text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="form-row">
             <label for="email">Email</label>
             <input id="email" type="email" wire:model.defer="email" />
             @error('email') <p class="text-red-500">{{ $message }}</p> @enderror
