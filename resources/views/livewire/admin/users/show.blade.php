@@ -62,5 +62,191 @@
                 </tbody>
             </table>
         </div>
+
+            @if ($user)
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Suppliers</h3>
+                            <p style="margin: 0; color: var(--muted);">Open a supplier record directly and review their assigned vehicle.</p>
+                        </div>
+                        <span class="badge">{{ $user->suppliers->count() }} suppliers</span>
+                    </div>
+                    <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Suppliers</th>
+                                    <th>Status</th>
+                                    <th>City</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($user->suppliers as $supplier)
+                                    <tr>
+                                        <td data-label="Suppliers">
+                                            <a href="{{ route('admin.suppliers.show', $supplier) }}" style="color: var(--accent); font-weight: 600;">
+                                                {{ $supplier->business_name }}
+                                            </a>
+                                        </td>
+                                        <td data-label="Status"><span class="badge" data-status="{{ $supplier->status }}">{{ $supplier->status }}</span></td>
+                                        <td data-label="City">{{ $supplier->city }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3">No suppliers created.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Vehicles</h3>
+                            <p style="margin: 0; color: var(--muted);">Open a vehicle record and review any assigned drivers.</p>
+                        </div>
+                        <span class="badge">{{ $user->vehicles->count() }} vehicles</span>
+                    </div>
+                    <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Plate Number</th>
+                                    <th>Category</th>
+                                    <th>Drivers</th>
+                                    <th>Status</th>
+                                    <th>Supplier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($user->vehicles as $vehicle)
+                                    <tr>
+                                        <td data-label="Vehicle">
+                                            <a href="{{ route('admin.vehicles.show', $vehicle) }}" style="color: var(--accent); font-weight: 600;">
+                                                {{ $vehicle->vehicle_make }} {{ $vehicle->vehicle_model }}
+                                            </a>
+                                        </td>
+                                        <td data-label="Plate Number">{{ $vehicle->plate_number }}</td>
+                                        <td data-label="Category">{{ $vehicle->vehicle_category }}</td>
+                                        <td data-label="Drivers">
+                                            @if ($vehicle->drivers->isEmpty())
+                                                —
+                                            @else
+                                                {{ $vehicle->drivers->pluck('driver_name')->join(', ') }}
+                                            @endif
+                                        </td>
+                                        <td data-label="Status"><span class="badge" data-status="{{ $vehicle->status }}">{{ $vehicle->status }}</span></td>
+                                        <td data-label="Supplier">{{ $vehicle->supplier->business_name }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5">No vehicles created.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+                        <div>
+                            <h3 style="margin-bottom: 4px;">Drivers</h3>
+                            <p style="margin: 0; color: var(--muted);">Open a driver record and  review their assigned vehicle.</p>
+                        </div>
+                        <span class="badge">{{ $user->drivers->count() }} drivers</span>
+                    </div>
+                    <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Driver</th>
+                                    <th>Phone Number</th>
+                                    <th>License Number</th>
+                                    <th>Assigned Vehicle</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($user->drivers as $driver)
+                                    <tr>
+                                        <td data-label="Driver">
+                                            <a href="{{ route('admin.drivers.show', $driver) }}" style="color: var(--accent); font-weight: 600;">
+                                                {{ $driver->driver_name }}
+                                            </a>
+                                        </td>
+                                        <td data-label="Phone Number">{{ $driver->phone_number }}</td>
+                                        <td data-label="License Number">{{ $driver->license_number }}</td>
+                                        <td data-label="Assigned Vehicle">
+                                            @if ($driver->vehicle)
+                                                <a href="{{ route('admin.vehicles.show', $driver->vehicle) }}" style="color: var(--accent); font-weight: 600;">
+                                                    {{ $driver->vehicle->vehicle_make }} {{ $driver->vehicle->vehicle_model }}
+                                                </a>
+                                                <div style="color: var(--muted); font-size: 0.9rem;">{{ $driver->vehicle->plate_number }}</div>
+                                            @else
+                                                —
+                                            @endif
+                                        </td>
+                                        <td data-label="Status"><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5">No drivers created.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bookings</th>
+                                    <th>Pickup Time</th>
+                                    <th>Vehicle</th>
+                                    <th>Driver</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($user->bookings as $booking)
+                                    <tr>
+                                        <td data-label="Bookings">{{ $booking->customer_name }}</td>
+                                        <td data-label="Pickup Time">{{ $booking->pickup_time }}</td>
+                                        <td data-label="Vehicle">
+                                            @if ($booking->vehicle)
+                                                <a href="{{ route('admin.vehicles.show', $booking->vehicle) }}" style="color: var(--accent); font-weight: 600;">
+                                                    {{ $booking->vehicle->vehicle_make }} {{ $booking->vehicle->vehicle_model }}
+                                                </a>
+                                            @else
+                                                —
+                                            @endif
+                                        </td>
+                                        <td data-label="Driver">
+                                            @if ($booking->driver)
+                                                <a href="{{ route('admin.drivers.show', $booking->driver) }}" style="color: var(--accent); font-weight: 600;">
+                                                    {{ $booking->driver->driver_name }}
+                                                </a>
+                                            @else
+                                                —
+                                            @endif
+                                        </td>
+                                        <td data-label="Status"><span class="badge" data-status="{{ $booking->status }}">{{ $booking->status }}</span></td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5">No bookings created.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 </section>

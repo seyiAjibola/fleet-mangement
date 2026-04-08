@@ -15,7 +15,12 @@ class Show extends Component
 
     public function mount(User $user): void
     {
-        $this->user = $user;
+        $this->user = $user->load([
+            'suppliers',
+            'vehicles',
+            'drivers',
+            'bookings',
+        ]);
     }
 
     public function render()
