@@ -85,7 +85,11 @@
                     <h3 style="margin-bottom: 4px;">Vehicles Under Supplier</h3>
                     <p style="margin: 0; color: var(--muted);">Open a vehicle record directly from the supplier profile and review any assigned drivers.</p>
                 </div>
-                <span class="badge">{{ $supplier->vehicles->count() }} vehicles</span>
+                <div>
+                    <span class="badge">{{ $supplier->vehicles->count() }} vehicles</span>
+                    <a class="button" href="{{ route('admin.vehicles.create') }}">Add Vehicle</a>
+                </div>
+                
             </div>
 
             <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
@@ -134,7 +138,11 @@
                     <h3 style="margin-bottom: 4px;">Drivers Under Supplier</h3>
                     <p style="margin: 0; color: var(--muted);">Open a driver record directly from the supplier profile and review their assigned vehicle.</p>
                 </div>
-                <span class="badge">{{ $supplier->drivers->count() }} drivers</span>
+                <div>
+                    <span class="badge">{{ $supplier->drivers->count() }} drivers</span>
+                    <a class="button" href="{{ route('admin.drivers.create') }}">Add Driver</a>
+                </div>
+                
             </div>
 
             <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">

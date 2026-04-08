@@ -90,7 +90,11 @@
                     <h3 style="margin-bottom: 4px;">Assigned Drivers</h3>
                     <p style="margin: 0; color: var(--muted);">Open the full driver record directly from this vehicle page.</p>
                 </div>
-                <span class="badge">{{ $vehicle->drivers->count() }} drivers</span>
+                <div>
+                    <span class="badge">{{ $vehicle->drivers->count() }} drivers</span>
+                    <a class="button" href="{{ route('admin.drivers.create') }}">Add Driver</a>
+                </div>
+                
             </div>
 
             <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">

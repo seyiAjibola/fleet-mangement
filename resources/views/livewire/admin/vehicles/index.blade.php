@@ -79,6 +79,7 @@
                     <th>Plate</th>
                     <th>Fuel</th>
                     <th>Status</th>
+                    <th>Supplier</th>
                     <th></th>
                 </tr>
             </thead>
@@ -93,6 +94,7 @@
                         <td data-label="Plate">{{ $vehicle->plate_number }}</td>
                         <td data-label="Fuel">{{ ucfirst($vehicle->fuel_type ?? '—') }}</td>
                         <td data-label="Status"><span class="badge" data-status="{{ $vehicle->status }}">{{ $vehicle->status }}</span></td>
+                        <td data-label="Supplier">{{ $vehicle->supplier->business_name }}</span></td>
                         <td>
                             <div class="table-actions">
                                 <a class="button secondary icon-button icon-view" href="{{ route('admin.vehicles.show', $vehicle) }}" aria-label="View vehicle" title="View vehicle"><x-admin.icon name="view" /></a>
