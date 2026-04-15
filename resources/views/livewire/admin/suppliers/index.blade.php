@@ -76,7 +76,9 @@
                             <div class="table-actions">
                                 <a class="button secondary icon-button icon-view" href="{{ route('admin.suppliers.show', $supplier) }}" aria-label="View supplier" title="View supplier"><x-admin.icon name="view" /></a>
                                 <a class="button secondary icon-button icon-edit" href="{{ route('admin.suppliers.edit', $supplier) }}" aria-label="Edit supplier" title="Edit supplier"><x-admin.icon name="edit" /></a>
-                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $supplier->supplier_id }})" onclick="return confirm('Delete this supplier?')" aria-label="Delete supplier" title="Delete supplier"><x-admin.icon name="delete" /></button>
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $supplier->supplier_id }})" 
+                                    onclick="if(!confirm('Delete this supplier?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                    aria-label="Delete supplier" title="Delete supplier"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>

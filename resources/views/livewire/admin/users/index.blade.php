@@ -40,7 +40,9 @@
                             <div class="table-actions">
                                 <a class="button secondary icon-button icon-view" href="{{ route('admin.users.show', $user) }}" aria-label="View user" title="View user"><x-admin.icon name="view" /></a>
                                 <a class="button secondary icon-button icon-edit" href="{{ route('admin.users.edit', $user) }}" aria-label="Edit user" title="Edit user"><x-admin.icon name="edit" /></a>
-                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $user->id }})" onclick="return confirm('Delete this user?')" aria-label="Delete user" title="Delete user"><x-admin.icon name="delete" /></button>
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $user->id }})" 
+                                    onclick="if(!confirm('Delete this user?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                    aria-label="Delete user" title="Delete user"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>

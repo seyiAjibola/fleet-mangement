@@ -44,11 +44,17 @@
                                 <a class="button secondary icon-button icon-view" href="{{ route('admin.drivers.show', $driver) }}" aria-label="View driver" title="View driver"><x-admin.icon name="view" /></a>
                                 <a class="button secondary icon-button icon-edit" href="{{ route('admin.drivers.edit', $driver) }}" aria-label="Edit driver" title="Edit driver"><x-admin.icon name="edit" /></a>
                                 @if ($driver->status === 'active')
-                                    <button class="button secondary icon-button icon-cancel" type="button" wire:click="deactivate({{ $driver->driver_id }})" onclick="return confirm('Make this driver inactive?')" aria-label="Make driver inactive" title="Make driver inactive"><x-admin.icon name="cancel" /></button>
+                                    <button class="button secondary icon-button icon-cancel" type="button" wire:click="deactivate({{ $driver->driver_id }})" 
+                                        onclick="if(!confirm('Make this driver inactive?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                        aria-label="Make driver inactive" title="Make driver inactive"><x-admin.icon name="cancel" /></button>
                                 @else
-                                    <button class="button secondary icon-button icon-confirm" type="button" wire:click="activate({{ $driver->driver_id }})" onclick="return confirm('Make this driver active?')" aria-label="Make driver active" title="Make driver active"><x-admin.icon name="confirm" /></button>
+                                    <button class="button secondary icon-button icon-confirm" type="button" wire:click="activate({{ $driver->driver_id }})" 
+                                        onclick="if(!confirm('Make this driver active?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                        aria-label="Make driver active" title="Make driver active"><x-admin.icon name="confirm" /></button>
                                 @endif
-                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $driver->driver_id }})" onclick="return confirm('Delete this driver?')" aria-label="Delete driver" title="Delete driver"><x-admin.icon name="delete" /></button>
+                                <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $driver->driver_id }})" 
+                                    onclick="if(!confirm('Delete this driver?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                    title="Delete driver"><x-admin.icon name="delete" /></button>
                             </div>
                         </td>
                     </tr>
