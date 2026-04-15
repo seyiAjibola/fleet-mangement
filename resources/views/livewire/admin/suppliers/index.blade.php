@@ -40,11 +40,10 @@
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
-            <div>
+            <div class="d-flex justify-content-start">
                 <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
                 <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
-            </div>
-            
+            </div>    
         </div>
     </div>
     <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end">  

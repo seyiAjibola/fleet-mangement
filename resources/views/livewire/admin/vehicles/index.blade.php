@@ -59,8 +59,10 @@
                     <option value="unavailable">Unavailable</option>
                 </select>
             </div>
-            <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
-            <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
+            <div class="d-flex justify-content-start">
+                <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
+                <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
+            </div>
         </div>
     </div>
     <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end"> 
