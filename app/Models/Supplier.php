@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\OwnedByUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Supplier extends Model
 {
@@ -39,6 +40,11 @@ class Supplier extends Model
     public function drivers(): HasMany
     {
         return $this->hasMany(Driver::class, 'supplier_id', 'supplier_id');
+    }
+
+    public function complianceRecords(): MorphMany
+    {
+        return $this->morphMany(ComplianceRecord::class, 'entity');
     }
 
     public function determineScore(?int $vehicleCount = null): int

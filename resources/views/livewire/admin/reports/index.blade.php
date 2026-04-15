@@ -21,6 +21,9 @@
         <button class="button secondary" type="button" wire:click="exportSupplierFleetOverview">Export Supplier Fleet Overview</button>
         <button class="button secondary" type="button" wire:click="exportVehicleDriverAssignments">Export Vehicle Driver Assignments</button>
         <button class="button secondary" type="button" wire:click="exportStaffOverview">Export Staff Overview</button>
+        <button class="button secondary" type="button" wire:click="exportComplianceSummary">Export Compliance Summary</button>
+        <button class="button secondary" type="button" wire:click="exportComplianceExceptions">Export Compliance Exceptions</button>
+        <button class="button secondary" type="button" wire:click="exportSupplierComplianceRanking">Export Supplier Compliance Ranking</button>
     </div>
 
     <div class="card-grid">
@@ -41,6 +44,123 @@
             <div class="chart-wrap">
                 <canvas id="supplierTierChart"></canvas>
             </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+            <div>
+                <h3 style="margin-bottom: 4px;">Compliance Summary</h3>
+                <p style="margin: 0; color: var(--muted);">Track valid, expiring, expired, and non-compliant records across all entities.</p>
+            </div>
+            <span class="badge">{{ $complianceSummary['total'] }} records</span>
+        </div>
+
+        <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+            <div class="card">
+                <h3>Valid</h3>
+                <div class="metric">{{ $complianceSummary['valid'] }}</div>
+            </div>
+            <div class="card">
+                <h3>Expiring</h3>
+                <div class="metric">{{ $complianceSummary['expiring'] }}</div>
+            </div>
+            <div class="card">
+                <h3>Expired</h3>
+                <div class="metric">{{ $complianceSummary['expired'] }}</div>
+            </div>
+            <div class="card">
+                <h3>Non-Compliant</h3>
+                <div class="metric">{{ $complianceSummary['non_compliant'] }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+            <div>
+                <h3 style="margin-bottom: 4px;">Supplier Compliance Ranking</h3>
+                <p style="margin: 0; color: var(--muted);">Weighted ranking based on valid, expiring, expired, and non-compliant records across supplier, vehicle, and driver compliance.</p>
+            </div>
+            <span class="badge">{{ $supplierComplianceRanking->count() }} suppliers</span>
+        </div>
+
+        <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supplier</th>
+                        <th>Score</th>
+                        <th>Records</th>
+                        <th>Valid</th>
+                        <th>Expiring</th>
+                        <th>Expired</th>
+                        <th>Non-Compliant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($supplierComplianceRanking as $row)
+                        <tr>
+                            <td data-label="Supplier">
+                                <a href="{{ route('admin.suppliers.show', $row['supplier']) }}" style="color: var(--accent); font-weight: 600;">
+                                    {{ $row['supplier']->business_name }}
+                                </a>
+                            </td>
+                            <td data-label="Score"><span class="badge">{{ $row['score'] }}</span></td>
+                            <td data-label="Records">{{ $row['total_records'] }}</td>
+                            <td data-label="Valid">{{ $row['valid_count'] }}</td>
+                            <td data-label="Expiring">{{ $row['expiring_count'] }}</td>
+                            <td data-label="Expired">{{ $row['expired_count'] }}</td>
+                            <td data-label="Non-Compliant">{{ $row['non_compliant_count'] }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7">No supplier compliance data available.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+            <div>
+                <h3 style="margin-bottom: 4px;">Compliance Exceptions</h3>
+                <p style="margin: 0; color: var(--muted);">Review the records that need attention first.</p>
+            </div>
+            <span class="badge">{{ $complianceExceptions->count() }} exceptions</span>
+        </div>
+
+        <div class="table-card" style="box-shadow: none; border: 1px solid var(--border);">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Entity</th>
+                        <th>Type</th>
+                        <th>Document</th>
+                        <th>Expiry</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($complianceExceptions as $record)
+                        <tr>
+                            <td data-label="Entity">{{ $this->complianceEntityLabel($record) }}</td>
+                            <td data-label="Type">{{ $record->complianceType?->name ?: '—' }}</td>
+                            <td data-label="Document">{{ $record->document_number ?: '—' }}</td>
+                            <td data-label="Expiry">{{ $record->expiry_date?->format('Y-m-d') ?? 'N/A' }}</td>
+                            <td data-label="Status">
+                                <livewire:admin.compliance.compliance-badge :status="$record->status" :key="'reports-compliance-badge-'.$record->id" />
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">No compliance exceptions found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -346,6 +466,37 @@
 
             <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
                 <table>
+                    <tbody>
+                        <tr>
+                            <th style="width: 220px;">Compliance Score</th>
+                            <td>{{ $selectedSupplierCompliance['score'] ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Compliance Records</th>
+                            <td>{{ $selectedSupplierCompliance['total_records'] ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Valid</th>
+                            <td>{{ $selectedSupplierCompliance['valid_count'] ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Expiring</th>
+                            <td>{{ $selectedSupplierCompliance['expiring_count'] ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Expired</th>
+                            <td>{{ $selectedSupplierCompliance['expired_count'] ?? 0 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Non-Compliant</th>
+                            <td>{{ $selectedSupplierCompliance['non_compliant_count'] ?? 0 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                <table>
                     <thead>
                         <tr>
                             <th>Supplier Cars</th>
@@ -420,6 +571,37 @@
                         @empty
                             <tr>
                                 <td colspan="4">No drivers assigned under this supplier.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Compliance Item</th>
+                            <th>Entity</th>
+                            <th>Document</th>
+                            <th>Expiry</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse (($selectedSupplierCompliance['records'] ?? collect()) as $record)
+                            <tr>
+                                <td data-label="Compliance Item">{{ $record->complianceType?->name ?: '—' }}</td>
+                                <td data-label="Entity">{{ $this->complianceEntityLabel($record) }}</td>
+                                <td data-label="Document">{{ $record->document_number ?: '—' }}</td>
+                                <td data-label="Expiry">{{ $record->expiry_date?->format('Y-m-d') ?? 'N/A' }}</td>
+                                <td data-label="Status">
+                                    <livewire:admin.compliance.compliance-badge :status="$record->status" :key="'supplier-compliance-badge-'.$record->id" />
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">No compliance records tracked for this supplier yet.</td>
                             </tr>
                         @endforelse
                     </tbody>

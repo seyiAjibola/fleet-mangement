@@ -4,11 +4,13 @@ use App\Livewire\Admin\Bookings\Create as BookingsCreate;
 use App\Livewire\Admin\Bookings\Edit as BookingsEdit;
 use App\Livewire\Admin\Bookings\Index as BookingsIndex;
 use App\Livewire\Admin\Bookings\Show as BookingsShow;
+use App\Livewire\Admin\Compliance\Index as ComplianceIndex;
 use App\Livewire\Admin\Dashboard\Index as DashboardIndex;
 use App\Livewire\Admin\Drivers\Create as DriversCreate;
 use App\Livewire\Admin\Drivers\Edit as DriversEdit;
 use App\Livewire\Admin\Drivers\Index as DriversIndex;
 use App\Livewire\Admin\Drivers\Show as DriversShow;
+use App\Livewire\Admin\Notifications\Index as NotificationsIndex;
 use App\Livewire\Admin\Reports\Index as ReportsIndex;
 use App\Livewire\Admin\Suppliers\Create as SuppliersCreate;
 use App\Livewire\Admin\Suppliers\Edit as SuppliersEdit;
@@ -53,6 +55,9 @@ Route::middleware(['auth'])
         Route::get('drivers/create', DriversCreate::class)->name('drivers.create');
         Route::get('drivers/{driver}', DriversShow::class)->name('drivers.show');
         Route::get('drivers/{driver}/edit', DriversEdit::class)->name('drivers.edit');
+
+        Route::get('compliance', ComplianceIndex::class)->name('compliance.index');
+        Route::get('notifications', NotificationsIndex::class)->name('notifications.index');
 
         Route::get('customer-bookings', BookingsIndex::class)->name('bookings.index');
         Route::get('customer-bookings/create', BookingsCreate::class)->name('bookings.create');

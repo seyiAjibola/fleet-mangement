@@ -17,7 +17,7 @@ class Show extends Component
     {
         abort_unless($driver->isVisibleTo(auth()->user()), 403);
 
-        $this->driver = $driver->load(['supplier', 'vehicle']);
+        $this->driver = $driver->load(['supplier', 'vehicle', 'complianceRecords.complianceType']);
     }
 
     public function render()

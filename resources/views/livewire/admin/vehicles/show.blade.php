@@ -85,6 +85,10 @@
         </div>
 
         <div class="card">
+            <livewire:admin.compliance.compliance-list :entity="$vehicle" />
+            <livewire:admin.compliance.compliance-form />
+        </div>
+        <div class="card">
             <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
                 <div>
                     <h3 style="margin-bottom: 4px;">Assigned Drivers</h3>

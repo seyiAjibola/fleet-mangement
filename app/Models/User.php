@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CustomerBooking::class, 'created_by_user_id', 'id');
     }
+
+    public function complianceNotificationLogs(): HasMany
+    {
+        return $this->hasMany(ComplianceNotificationLog::class);
+    }
 }

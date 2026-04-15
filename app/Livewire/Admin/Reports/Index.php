@@ -2,12 +2,15 @@
 
 namespace App\Livewire\Admin\Reports;
 
+use App\Models\ComplianceRecord;
 use App\Models\CustomerBooking;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Driver;
+use App\Services\Compliance\ComplianceCheckService;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -361,9 +364,79 @@ class Index extends Component
         }, $filename);
     }
 
+    public function exportComplianceSummary()
+    {
+        $rows = $this->complianceRecords();
+        $filename = 'compliance-summary-' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $handle = fopen('php://output', 'wb');
+            fputcsv($handle, ['entity_type', 'entity_label', 'compliance_type', 'document_number', 'expiry_date', 'status']);
+            foreach ($rows as $row) {
+                fputcsv($handle, [
+                    $row->entity_type,
+                    $this->complianceEntityLabel($row),
+                    $row->complianceType?->name,
+                    $row->document_number,
+                    $row->expiry_date?->toDateString(),
+                    $row->status,
+                ]);
+            }
+            fclose($handle);
+        }, $filename);
+    }
+
+    public function exportComplianceExceptions()
+    {
+        $rows = $this->complianceRecords()
+            ->whereIn('status', ['expired', 'non_compliant']);
+        $filename = 'compliance-exceptions-' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $handle = fopen('php://output', 'wb');
+            fputcsv($handle, ['entity_type', 'entity_label', 'compliance_type', 'document_number', 'expiry_date', 'status']);
+            foreach ($rows as $row) {
+                fputcsv($handle, [
+                    $row->entity_type,
+                    $this->complianceEntityLabel($row),
+                    $row->complianceType?->name,
+                    $row->document_number,
+                    $row->expiry_date?->toDateString(),
+                    $row->status,
+                ]);
+            }
+            fclose($handle);
+        }, $filename);
+    }
+
+    public function exportSupplierComplianceRanking()
+    {
+        $rows = $this->supplierComplianceRanking();
+        $filename = 'supplier-compliance-ranking-' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($rows) {
+            $handle = fopen('php://output', 'wb');
+            fputcsv($handle, ['supplier', 'score', 'records', 'valid', 'expiring', 'expired', 'non_compliant']);
+            foreach ($rows as $row) {
+                fputcsv($handle, [
+                    $row['supplier']->business_name,
+                    $row['score'],
+                    $row['total_records'],
+                    $row['valid_count'],
+                    $row['expiring_count'],
+                    $row['expired_count'],
+                    $row['non_compliant_count'],
+                ]);
+            }
+            fclose($handle);
+        }, $filename);
+    }
+
     public function render()
     {
         [$start, $end] = $this->bookingRange();
+        $complianceRecords = $this->complianceRecords();
+        $supplierComplianceRanking = $this->supplierComplianceRanking($complianceRecords);
 
         $bookingSources = CustomerBooking::query()
             ->when($start && $end, fn ($query) => $query->whereBetween('pickup_time', [$start, $end]))
@@ -434,6 +507,10 @@ class Index extends Component
                 ->find($this->supplierReportId)
             : null;
 
+        $selectedSupplierCompliance = $selectedSupplierReport
+            ? $supplierComplianceRanking->firstWhere('supplier.supplier_id', $selectedSupplierReport->supplier_id)
+            : null;
+
         $selectedStaffReport = $this->staffReportId
             ? User::query()
                 ->where('role', 'staff')
@@ -470,9 +547,95 @@ class Index extends Component
             'vehicleDriverAssignments' => $vehicleDriverAssignments,
             'suppliers' => $suppliers,
             'selectedSupplierReport' => $selectedSupplierReport,
+            'complianceSummary' => [
+                'total' => $complianceRecords->count(),
+                'valid' => $complianceRecords->where('status', 'valid')->count(),
+                'expiring' => $complianceRecords->where('status', 'expiring')->count(),
+                'expired' => $complianceRecords->where('status', 'expired')->count(),
+                'non_compliant' => $complianceRecords->where('status', 'non_compliant')->count(),
+            ],
+            'complianceExceptions' => $complianceRecords
+                ->whereIn('status', ['expired', 'non_compliant'])
+                ->sortBy([
+                    ['status', 'asc'],
+                    ['expiry_date', 'asc'],
+                ])
+                ->values(),
+            'supplierComplianceRanking' => $supplierComplianceRanking,
+            'selectedSupplierCompliance' => $selectedSupplierCompliance,
             'staffOverview' => $staffOverview,
             'staffMembers' => $staffMembers,
             'selectedStaffReport' => $selectedStaffReport,
         ]);
+    }
+
+    private function complianceRecords(): Collection
+    {
+        $records = ComplianceRecord::query()
+            ->with(['complianceType', 'entity'])
+            ->get();
+
+        return app(ComplianceCheckService::class)->refreshCollection($records);
+    }
+
+    private function supplierComplianceRanking(?Collection $records = null): Collection
+    {
+        $records ??= $this->complianceRecords();
+
+        return Supplier::query()
+            ->with([
+                'vehicles:vehicle_id,supplier_id,vehicle_make,vehicle_model,plate_number',
+                'drivers:driver_id,supplier_id,driver_name,license_number',
+            ])
+            ->orderBy('business_name')
+            ->get()
+            ->map(function (Supplier $supplier) use ($records) {
+                $vehicleIds = $supplier->vehicles->pluck('vehicle_id')->all();
+                $driverIds = $supplier->drivers->pluck('driver_id')->all();
+
+                $supplierRecords = $records->filter(function (ComplianceRecord $record) use ($supplier, $vehicleIds, $driverIds) {
+                    return ($record->entity_type === 'supplier' && (int) $record->entity_id === (int) $supplier->supplier_id)
+                        || ($record->entity_type === 'vehicle' && in_array((int) $record->entity_id, $vehicleIds, true))
+                        || ($record->entity_type === 'driver' && in_array((int) $record->entity_id, $driverIds, true));
+                })->values();
+
+                $total = $supplierRecords->count();
+                $valid = $supplierRecords->where('status', 'valid')->count();
+                $expiring = $supplierRecords->where('status', 'expiring')->count();
+                $expired = $supplierRecords->where('status', 'expired')->count();
+                $nonCompliant = $supplierRecords->where('status', 'non_compliant')->count();
+
+                $score = $total > 0
+                    ? (int) round((($valid * 100) + ($expiring * 70) + ($expired * 35)) / $total)
+                    : 0;
+
+                return [
+                    'supplier' => $supplier,
+                    'score' => $score,
+                    'total_records' => $total,
+                    'valid_count' => $valid,
+                    'expiring_count' => $expiring,
+                    'expired_count' => $expired,
+                    'non_compliant_count' => $nonCompliant,
+                    'records' => $supplierRecords,
+                ];
+            })
+            ->sortBy([
+                ['score', 'desc'],
+                ['non_compliant_count', 'asc'],
+                ['expired_count', 'asc'],
+                ['supplier.business_name', 'asc'],
+            ])
+            ->values();
+    }
+
+    public function complianceEntityLabel(ComplianceRecord $record): string
+    {
+        return match ($record->entity_type) {
+            'vehicle' => trim(($record->entity?->vehicle_make ?? '') . ' ' . ($record->entity?->vehicle_model ?? '')) . ' (' . ($record->entity?->plate_number ?? '—') . ')',
+            'driver' => ($record->entity?->driver_name ?? 'Unknown') . ' (' . ($record->entity?->license_number ?? '—') . ')',
+            'supplier' => $record->entity?->business_name ?? 'Unknown',
+            default => 'Unknown',
+        };
     }
 }

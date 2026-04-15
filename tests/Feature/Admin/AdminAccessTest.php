@@ -26,6 +26,8 @@ class AdminAccessTest extends TestCase
         $response = $this->actingAs($user)->get('/admin');
 
         $response->assertOk();
+        $this->actingAs($user)->get('/admin/compliance')->assertOk();
+        $this->actingAs($user)->get('/admin/notifications')->assertOk();
     }
 
     public function test_staff_users_cannot_access_admin_only_routes(): void

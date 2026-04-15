@@ -379,7 +379,7 @@
         }
 
         .button {
-            padding: 10px 16px;
+            padding: 5px 16px;
             border-radius: 99px;
             border: 1px solid transparent;
             background: var(--accent);
@@ -924,6 +924,7 @@
                 <a class="nav-link {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}" href="{{ route('admin.suppliers.index') }}">Suppliers</a>
                 <a class="nav-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}" href="{{ route('admin.vehicles.index') }}">Vehicles</a>
                 <a class="nav-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}" href="{{ route('admin.drivers.index') }}">Drivers</a>
+                <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">Compliance</a>
                 <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">Bookings</a>
                 @if (auth()->user()->isAdmin())
                     <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">Reports</a>
@@ -947,6 +948,7 @@
                     </div>
                 </div>
                 <div class="admin-topbar-right">
+                    <livewire:admin.notifications.center />
                     <details class="admin-topbar-menu">
                         <summary class="admin-topbar-trigger">
                             <span>{{ auth()->user()->name }}</span>
@@ -995,6 +997,10 @@
                     @if (request()->routeIs('admin.drivers.edit'))
                         <span class="subnav-pill">Edit Driver</span>
                     @endif
+                </div>
+            @elseif (request()->routeIs('admin.compliance.*'))
+                <div class="subnav">
+                    <a class="subnav-link {{ request()->routeIs('admin.compliance.index') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">Compliance Dashboard</a>
                 </div>
             @elseif (request()->routeIs('admin.bookings.*'))
                 <div class="subnav">

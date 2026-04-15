@@ -34,4 +34,9 @@ class Driver extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'vehicle_id');
     }
+
+    public function complianceRecords()
+    {
+        return $this->morphMany(ComplianceRecord::class, 'entity');
+    }
 }

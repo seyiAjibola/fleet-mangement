@@ -15,6 +15,9 @@ This document explains the main modules in simple terms.
 - Staff users cannot access:
   - User management
   - Reports
+- Both admin and staff users can access:
+  - Compliance dashboard
+  - Compliance notifications
 
 ## 2. Dashboard
 
@@ -244,6 +247,9 @@ The vehicle detail page now also shows:
 
 - assigned drivers
 - links from driver names to driver detail pages
+- a compliance section with tracked compliance items for that vehicle
+- a form to add or edit compliance records
+- attached compliance documents for each record
 
 ### Vehicle Status Actions
 
@@ -286,7 +292,139 @@ The driver list page now includes quick actions to:
 
 These actions ask for confirmation before updating the record.
 
-## 7. Booking Management
+### Driver Detail View
+
+The driver detail page now also shows:
+
+- assigned vehicle information
+- a compliance section with tracked compliance items for that driver
+- a form to add or edit compliance records
+- attached compliance documents for each record
+
+## 7. Compliance Management
+
+The compliance module replaces hardcoded expiry fields with a generic tracking system.
+
+Tracked building blocks:
+
+- `compliance_types`
+- `compliance_records`
+- `compliance_documents`
+- `compliance_notification_logs`
+- `compliance_audit_logs`
+- framework `notifications`
+
+Supported entity types:
+
+- `vehicle`
+- `driver`
+- `supplier`
+
+Current compliance capabilities:
+
+- create and edit compliance records from vehicle and driver detail pages
+- assign compliance types by entity type
+- track document number, issued date, expiry date, status, and creator
+- upload supporting documents such as PDF and image files
+- calculate status automatically using compliance type rules
+- refresh status during dashboard checks and page loads
+
+Current status values:
+
+- `valid`
+- `expiring`
+- `expired`
+- `non_compliant`
+
+### Compliance Status Engine
+
+Status is calculated automatically from:
+
+- expiry date
+- notification days before
+- grace period days
+- whether expiry is required for the compliance type
+
+Current behavior:
+
+- `valid`
+  - before the notification window
+- `expiring`
+  - inside the notification window up to expiry
+- `expired`
+  - after expiry but still inside grace period
+- `non_compliant`
+  - after expiry plus grace period
+
+### Compliance Dashboard
+
+The compliance dashboard supports:
+
+- filtering by entity type
+- filtering by status
+- searching by entity, type, or document number
+- exception-only filtering
+- summary widgets for valid, expiring, expired, and non-compliant counts
+- CSV export for compliance summary
+- CSV export for compliance exceptions
+
+### Compliance Notifications
+
+The compliance notification engine runs from the scheduled compliance check.
+
+Current recipients:
+
+- admin users
+- the user who created the compliance record
+
+Current channels:
+
+- in-app notifications
+- email when the recipient has an email address
+
+Current triggers:
+
+- `expiring`
+- `expired`
+- `non_compliant`
+
+Anti-spam protection uses:
+
+- `last_notified_at` on the compliance record
+- `compliance_notification_logs` with a unique context key per recipient and status snapshot
+
+### Compliance Documents
+
+Each compliance record can store supporting documents.
+
+Current document support:
+
+- multiple uploads
+- PDF files
+- image files
+- remove existing attachments
+- open uploaded files from the compliance form
+
+### Compliance Audit Trail
+
+Compliance changes are now written to an audit log.
+
+Current audited actions:
+
+- compliance record created
+- compliance record updated
+- supporting document added
+- supporting document removed
+- status changed by the scheduled compliance check
+
+The compliance form shows recent activity history with:
+
+- action summary
+- actor name or `System`
+- timestamp
+- indication when the change came from the scheduled compliance check
+
+## 8. Booking Management
 
 The booking module manages customer ride bookings.
 
@@ -337,7 +475,7 @@ This check happens:
 
 That means stale tabs or crafted requests cannot bypass the conflict rule.
 
-## 8. Reports
+## 9. Reports
 
 The reports module gives an analytics and export center.
 
@@ -357,6 +495,9 @@ Exports included:
 - Staff overview CSV
 - Selected staff report CSV
 - Selected supplier report CSV
+- Compliance summary CSV
+- Compliance exceptions CSV
+- Supplier compliance ranking CSV
 
 Additional report sections:
 
@@ -365,6 +506,9 @@ Additional report sections:
 - Supplier specific report
 - Staff overview
 - Staff specific report
+- Compliance summary
+- Compliance exceptions
+- Supplier compliance ranking
 
 ### Supplier Specific Report
 
@@ -374,7 +518,35 @@ The supplier specific report supports:
 - viewing supplier summary information
 - viewing the supplier's cars
 - viewing assigned drivers under that supplier
+- viewing supplier compliance score and compliance counts
+- viewing all compliance records tied to the supplier, its vehicles, and its drivers
 - exporting supplier summary, vehicle rows, and driver rows to CSV
+
+### Compliance Reports
+
+The reports module now also includes compliance reporting.
+
+Available compliance reporting views:
+
+- total compliance summary
+- compliance exception table
+- supplier compliance ranking
+
+Supplier compliance ranking is calculated from:
+
+- supplier compliance records
+- vehicle compliance records under that supplier
+- driver compliance records under that supplier
+
+The current ranking score gives more weight to:
+
+- valid records
+- expiring records
+
+And penalizes:
+
+- expired records
+- non-compliant records
 
 ### Staff Report
 
@@ -395,7 +567,7 @@ The detailed staff report includes:
 
 Date filters affect the booking-based parts of staff reports.
 
-## 9. Profile Management
+## 10. Profile Management
 
 Authenticated users can:
 
@@ -403,7 +575,7 @@ Authenticated users can:
 - Change password
 - Delete their own account
 
-## 10. Admin UI
+## 11. Admin UI
 
 The admin UI now includes shared usability improvements:
 
@@ -414,8 +586,10 @@ The admin UI now includes shared usability improvements:
 - status badges with different colors by status
 - stronger table headers with a more visible background
 - improved sidebar, top header, and filter input styling
+- topbar compliance notification inbox
+- full notifications page with unread/read states
 
-## 11. Testing
+## 12. Testing
 
 The app includes automated tests for:
 
@@ -425,3 +599,9 @@ The app includes automated tests for:
 - Profile management
 - Booking conflict prevention
 - Admin route access by role
+- Compliance record creation and status calculation
+- Compliance document uploads
+- Compliance notifications and anti-spam logging
+- Compliance notification inbox read actions
+- Compliance reports and supplier compliance ranking
+- Compliance audit logging for record and status changes

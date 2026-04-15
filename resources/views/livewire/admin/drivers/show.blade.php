@@ -32,6 +32,11 @@
             </div>
         </div>
 
+        <div class="card">
+            <livewire:admin.compliance.compliance-list :entity="$driver" />
+            <livewire:admin.compliance.compliance-form />
+        </div>
+
         <div class="table-card">
             <table>
                 <tbody>
