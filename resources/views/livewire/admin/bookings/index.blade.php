@@ -61,8 +61,12 @@
                                 <a class="button secondary icon-button icon-view" href="{{ route('admin.bookings.show', $booking) }}" aria-label="View booking" title="View booking"><x-admin.icon name="view" /></a>
                                 <a class="button secondary icon-button icon-edit" href="{{ route('admin.bookings.edit', $booking) }}" aria-label="Edit booking" title="Edit booking"><x-admin.icon name="edit" /></a>
                                 <button class="button secondary icon-button icon-confirm" type="button" wire:click="confirmBooking({{ $booking->booking_id }})" aria-label="Confirm booking" title="Confirm booking"><x-admin.icon name="confirm" /></button>
-                                <button class="button secondary icon-button icon-reject" type="button" wire:click="rejectBooking({{ $booking->booking_id }})" onclick="return confirm('Reject this booking?')" aria-label="Reject booking" title="Reject booking"><x-admin.icon name="reject" /></button>
-                                <button class="button secondary icon-button icon-cancel" type="button" wire:click="cancelBooking({{ $booking->booking_id }})" onclick="return confirm('Cancel this booking?')" aria-label="Cancel booking" title="Cancel booking"><x-admin.icon name="cancel" /></button>
+                                <button class="button secondary icon-button icon-reject" type="button" wire:click="rejectBooking({{ $booking->booking_id }})" 
+                                    onclick="if(!confirm('Reject this booking?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                    aria-label="Reject booking" title="Reject booking"><x-admin.icon name="reject" /></button>
+                                <button class="button secondary icon-button icon-cancel" type="button" wire:click="cancelBooking({{ $booking->booking_id }})" 
+                                    onclick="if(!confirm('Cancel this booking?')){event.stopImmediatePropagation();event.preventDefault();}"
+                                    aria-label="Cancel booking" title="Cancel booking"><x-admin.icon name="cancel" /></button>
                                 <button class="button secondary icon-button icon-delete" type="button" wire:click="delete({{ $booking->booking_id }})" 
                                     onclick="if(!confirm('Delete this booking?')){event.stopImmediatePropagation();event.preventDefault();}"
                                     aria-label="Delete booking" title="Delete booking"><x-admin.icon name="delete" /></button>
