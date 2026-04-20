@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Support\Compliance\ComplianceEntityMap;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::morphMap(ComplianceEntityMap::morphMap());
+
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
