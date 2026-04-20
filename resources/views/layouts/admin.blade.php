@@ -104,6 +104,24 @@
             backdrop-filter: blur(10px);
         }
 
+        .nav-link-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .nav-link-icon {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+            opacity: 0.82;
+        }
+
+        .nav-link.active .nav-link-icon {
+            opacity: 1;
+        }
+
         .nav-link.active {
             background: linear-gradient(135deg, rgba(15, 118, 110, 0.16), rgba(15, 118, 110, 0.08));
             color: var(--accent);
@@ -917,17 +935,33 @@
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="brand">Zenocar</div>
             <nav class="nav-group">
-                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="dashboard" /></span><span>Dashboard</span></span>
+                </a>
                 @if (auth()->user()->isAdmin())
-                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">Users</a>
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="users" /></span><span>Users</span></span>
+                    </a>
                 @endif
-                <a class="nav-link {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}" href="{{ route('admin.suppliers.index') }}">Suppliers</a>
-                <a class="nav-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}" href="{{ route('admin.vehicles.index') }}">Vehicles</a>
-                <a class="nav-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}" href="{{ route('admin.drivers.index') }}">Drivers</a>
-                <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">Compliance</a>
-                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">Bookings</a>
+                <a class="nav-link {{ request()->routeIs('admin.suppliers.*') ? 'active' : '' }}" href="{{ route('admin.suppliers.index') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="suppliers" /></span><span>Suppliers</span></span>
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}" href="{{ route('admin.vehicles.index') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="vehicles" /></span><span>Vehicles</span></span>
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.drivers.*') ? 'active' : '' }}" href="{{ route('admin.drivers.index') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="drivers" /></span><span>Drivers</span></span>
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="compliance" /></span><span>Compliance</span></span>
+                </a>
+                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
+                    <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="bookings" /></span><span>Bookings</span></span>
+                </a>
                 @if (auth()->user()->isAdmin())
-                    <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">Reports</a>
+                    <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
+                        <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="reports" /></span><span>Reports</span></span>
+                    </a>
                 @endif
             </nav>
         </aside>
