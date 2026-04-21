@@ -132,6 +132,7 @@ class Index extends Component
             ->all();
 
         $supplierTiers = Supplier::query()
+            ->visibleTo($user)
             ->selectRaw('supplier_tier, count(*) as total')
             ->groupBy('supplier_tier')
             ->pluck('total', 'supplier_tier')
