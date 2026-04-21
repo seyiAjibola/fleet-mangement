@@ -131,6 +131,12 @@ class Index extends Component
             ->pluck('total', 'status')
             ->all();
 
+        $supplierTiers = Supplier::query()
+            ->selectRaw('supplier_tier, count(*) as total')
+            ->groupBy('supplier_tier')
+            ->pluck('total', 'supplier_tier')
+            ->all();
+
         return view('livewire.admin.dashboard.index', [
             'isAdmin' => $user->isAdmin(),
             'userCount' => $user->isAdmin() ? User::query()->count() : null,
@@ -166,6 +172,8 @@ class Index extends Component
             'bookingStatusValues' => array_values($bookingStatusCounts),
             'vehicleStatusLabels' => array_keys($vehicleStatusCounts),
             'vehicleStatusValues' => array_values($vehicleStatusCounts),
+            'supplierTierLabels' => array_keys($supplierTiers),
+            'supplierTierValues' => array_values($supplierTiers),
         ]);
     }
 }

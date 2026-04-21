@@ -955,9 +955,9 @@
                 <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">
                     <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="compliance" /></span><span>Compliance</span></span>
                 </a>
-                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
+                {{-- <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
                     <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="bookings" /></span><span>Bookings</span></span>
-                </a>
+                </a> --}}
                 @if (auth()->user()->isAdmin())
                     <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
                         <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="reports" /></span><span>Reports</span></span>
