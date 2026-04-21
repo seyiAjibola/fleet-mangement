@@ -18,6 +18,7 @@ Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
+    Artisan::call('storage:link');
 
     return 'Cache cleared';
 });
