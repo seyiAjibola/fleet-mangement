@@ -15,4 +15,4 @@ Artisan::command('compliance:check', function (ComplianceCheckService $service) 
     $this->info("Compliance check completed. {$result['updated']} records updated, {$result['notifications']} notifications sent.");
 })->purpose('Refresh compliance statuses and process notification windows');
 
-Schedule::command('compliance:check')->daily();
+Schedule::command('compliance:check')->dailyAt('01:00')->withoutOverlapping();
