@@ -385,6 +385,38 @@
             color: #374151;
         }
 
+        .toolbar .toolbar-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 24px;
+            margin-bottom: 0;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .toolbar .toolbar-checkbox input[type='checkbox'] {
+            width: 18px;
+            min-width: 18px;
+            height: 18px;
+            margin: 0;
+            padding: 0;
+            appearance: auto;
+            -webkit-appearance: checkbox;
+            border-radius: 4px;
+            border: 1px solid rgba(31, 35, 40, 0.18);
+            background: #fff;
+            box-shadow: none;
+            accent-color: var(--accent);
+            flex: 0 0 auto;
+        }
+
+        .toolbar .toolbar-checkbox span {
+            line-height: 1.2;
+        }
+
         .toolbar input:focus,
         .toolbar select:focus,
         .form-card input:focus,

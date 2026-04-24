@@ -25,8 +25,8 @@
             <label for="compliance-search">Search</label>
             <input id="compliance-search" type="text" wire:model.live.debounce.300ms="search" placeholder="Entity, type, or document" />
         </div>
-        <label style="display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;">
-            <input type="checkbox" wire:model.live="expiringSoonOnly" />
+        <label class="toolbar-checkbox" for="compliance-expiring-soon">
+            <input id="compliance-expiring-soon" type="checkbox" wire:model.live="expiringSoonOnly" />
             <span>Exceptions only</span>
         </label>
         <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
