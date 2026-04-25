@@ -539,11 +539,13 @@
 
         .vehicle-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 280px));
+            justify-content: start;
             gap: 16px;
         }
 
         .vehicle-gallery-item {
+            width: 100%;
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
