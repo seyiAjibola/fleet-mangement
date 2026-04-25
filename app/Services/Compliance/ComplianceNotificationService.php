@@ -61,7 +61,13 @@ class ComplianceNotificationService
             ->where('role', 'admin')
             ->get();
 
-        if ($record->creator) {
+        $owner = $record->entity && method_exists($record->entity, 'creator')
+            ? $record->entity->creator
+            : null;
+
+        if ($owner) {
+            $users->push($owner);
+        } elseif ($record->creator) {
             $users->push($record->creator);
         }
 

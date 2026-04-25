@@ -193,9 +193,10 @@ class ComplianceFeatureTest extends TestCase
         Notification::fake();
 
         $admin = User::factory()->admin()->create();
-        $creator = User::factory()->staff()->create();
+        $owner = User::factory()->staff()->create();
+        $otherStaff = User::factory()->staff()->create();
         $supplier = $this->createSupplier();
-        $vehicle = $this->createVehicle($supplier->supplier_id, $creator->id, 'NOT-101');
+        $vehicle = $this->createVehicle($supplier->supplier_id, $owner->id, 'NOT-101');
         $type = ComplianceType::query()->create([
             'name' => 'Vehicle Insurance',
             'entity_type' => 'vehicle',
@@ -211,7 +212,7 @@ class ComplianceFeatureTest extends TestCase
             'entity_id' => $vehicle->vehicle_id,
             'document_number' => 'NOTIF-001',
             'expiry_date' => now()->addDays(2)->toDateString(),
-            'created_by' => $creator->id,
+            'created_by' => $otherStaff->id,
         ])->load(['complianceType', 'creator', 'entity']);
 
         $sent = app(ComplianceNotificationService::class)->sendForRecord($record);
@@ -222,7 +223,8 @@ class ComplianceFeatureTest extends TestCase
         $this->assertDatabaseCount('compliance_notification_logs', 2);
 
         Notification::assertSentTo($admin, ComplianceStatusNotification::class);
-        Notification::assertSentTo($creator, ComplianceStatusNotification::class);
+        Notification::assertSentTo($owner, ComplianceStatusNotification::class);
+        Notification::assertNotSentTo($otherStaff, ComplianceStatusNotification::class);
 
         $resent = app(ComplianceNotificationService::class)->sendForRecord($record->fresh(['complianceType', 'creator', 'entity']));
 
