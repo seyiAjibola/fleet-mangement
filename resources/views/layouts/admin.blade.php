@@ -22,6 +22,7 @@
             --ink: #1f2328;
             --muted: #6b7280;
             --accent: #0f766e;
+            --accent-visited: #1f2328;
             --accent-2: #f59e0b;
             --border: #e7e2db;
             --shadow: 0 24px 60px rgba(31, 35, 40, 0.12);
@@ -43,10 +44,20 @@
         }
 
         a {
-            color: inherit;
             text-decoration: none;
         }
 
+        .admin-main .entity-link {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* .admin-main a.entity-link:visited {
+            color: var(--accent-visited);
+            font-weight: 600;
+        } */
+
+        
         img {
             max-width: 100%;
         }

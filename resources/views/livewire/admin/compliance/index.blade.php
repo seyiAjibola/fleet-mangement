@@ -81,7 +81,7 @@
                     @forelse ($records as $record)
                         <tr>
                             <td data-label="Entity">
-                                <a href="{{ $this->entityUrl($record) }}" style="color: var(--accent); font-weight: 600;">
+                                <a class="entity-link" href="{{ $this->entityUrl($record) }}">
                                     {{ $this->entityLabel($record) }}
                                 </a>
                                 <div style="color: var(--muted); font-size: 0.9rem;">{{ ucfirst($record->entity_type) }}</div>
