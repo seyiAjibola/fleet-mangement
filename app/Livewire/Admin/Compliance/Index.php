@@ -99,6 +99,12 @@ class Index extends Component
             $this->filteredRecords()->limit(50)->get()
         );
 
+        $records->loadMorph('entity', [
+            Vehicle::class => ['supplier:supplier_id,phone_number'],
+            Driver::class => [],
+            Supplier::class => [],
+        ]);
+
         $baseQuery = $this->visibleRecordsQuery();
         $totalRecords = (clone $baseQuery)->count();
         $validCount = (clone $baseQuery)->where('status', 'valid')->count();
@@ -167,9 +173,14 @@ class Index extends Component
     public function entityLabel(ComplianceRecord $record): string
     {
         return match ($record->entity_type) {
-            'vehicle' => trim(($record->entity?->vehicle_make ?? '') . ' ' . ($record->entity?->vehicle_model ?? '')) . ' (' . ($record->entity?->plate_number ?? '—') . ')',
-            'driver' => ($record->entity?->driver_name ?? 'Unknown') . ' (' . ($record->entity?->license_number ?? '—') . ')',
-            'supplier' => $record->entity?->business_name ?? 'Unknown',
+            'vehicle' => trim(($record->entity?->vehicle_make ?? '') . ' ' . ($record->entity?->vehicle_model ?? ''))
+                . ' (' . ($record->entity?->plate_number ?? '—') . ')'
+                . ' - Supplier: ' . ($record->entity?->supplier?->phone_number ?? '—'),
+            'driver' => ($record->entity?->driver_name ?? 'Unknown')
+                . ' (' . ($record->entity?->license_number ?? '—') . ')'
+                . ' - Phone: ' . ($record->entity?->phone_number ?? '—'),
+            'supplier' => ($record->entity?->business_name ?? 'Unknown')
+                . ' - Contact: ' . ($record->entity?->phone_number ?? '—'),
             default => 'Unknown',
         };
     }
