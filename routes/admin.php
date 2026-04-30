@@ -59,8 +59,8 @@ Route::middleware(['auth'])
         Route::get('compliance', ComplianceIndex::class)->name('compliance.index');
         Route::get('notifications', NotificationsIndex::class)->name('notifications.index');
 
-        // Route::get('customer-bookings', BookingsIndex::class)->name('bookings.index');
-        // Route::get('customer-bookings/create', BookingsCreate::class)->name('bookings.create');
-        // Route::get('customer-bookings/{booking}', BookingsShow::class)->name('bookings.show');
-        // Route::get('customer-bookings/{booking}/edit', BookingsEdit::class)->name('bookings.edit');
+        Route::get('customer-bookings', BookingsIndex::class)->name('bookings.index');
+        Route::get('customer-bookings/create', BookingsCreate::class)->name('bookings.create');
+        Route::get('customer-bookings/{booking}', BookingsShow::class)->name('bookings.show');
+        Route::get('customer-bookings/{booking}/edit', BookingsEdit::class)->name('bookings.edit');
     });
