@@ -1,12 +1,12 @@
 <section>
     <x-admin.header pageTitle="Reports" pageSubTitle="Analytics and export center." />
 
-    {{-- <div id="bookingSourceData" data-labels='@json($bookingSourceLabels)' data-values='@json($bookingSourceValues)' hidden></div> --}}
+    <div id="bookingSourceData" data-labels='@json($bookingSourceLabels)' data-values='@json($bookingSourceValues)' hidden></div>
     <div id="vehicleCategoryData" data-labels='@json($vehicleCategoryLabels)' data-values='@json($vehicleCategoryValues)' hidden></div>
     <div id="supplierTierData" data-labels='@json($supplierTierLabels)' data-values='@json($supplierTierValues)' hidden></div>
 
     <div class="toolbar">
-        {{-- <div>
+        <div>
             <label for="reports-start">Start date</label>
             <input id="reports-start" type="date" wire:model="startDate" />
         </div>
@@ -14,8 +14,8 @@
             <label for="reports-end">End date</label>
             <input id="reports-end" type="date" wire:model="endDate" />
         </div>
-        <button class="button secondary" type="button" wire:click="resetFilters">Reset</button> --}}
-        {{-- <button class="button" type="button" wire:click="exportBookingSources">Export Booking Sources</button> --}}
+        <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
+        <button class="button" type="button" wire:click="exportBookingSources">Export Booking Sources</button>
         <button class="button secondary" type="button" wire:click="exportVehicleCategories">Export Vehicle Categories</button>
         <button class="button secondary" type="button" wire:click="exportSupplierTiers">Export Supplier Tiers</button>
         <button class="button secondary" type="button" wire:click="exportSupplierFleetOverview">Export Supplier Fleet Overview</button>
@@ -27,12 +27,12 @@
     </div>
 
     <div class="card-grid">
-        {{-- <div class="card chart-card" wire:ignore>
+        <div class="card chart-card" wire:ignore>
             <h3>Bookings by Source</h3>
             <div class="chart-wrap">
                 <canvas id="bookingSourceChart"></canvas>
             </div>
-        </div> --}}
+        </div>
         <div class="card chart-card" wire:ignore>
             <h3>Vehicles by Category</h3>
             <div class="chart-wrap">
@@ -181,8 +181,8 @@
                         <th>Suppliers</th>
                         <th>Vehicles</th>
                         <th>Drivers</th>
-                        {{-- <th>Bookings</th> --}}
-                        {{-- <th>Confirmed</th> --}}
+                        <th>Bookings</th>
+                        <th>Confirmed</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -192,8 +192,8 @@
                             <td data-label="Suppliers">{{ $staff->suppliers_count }}</td>
                             <td data-label="Vehicles">{{ $staff->vehicles_count }}</td>
                             <td data-label="Drivers">{{ $staff->drivers_count }}</td>
-                            {{-- <td data-label="Bookings">{{ $staff->bookings_count }}</td> --}}
-                            {{-- <td data-label="Confirmed">{{ $staff->confirmed_bookings_count }}</td> --}}
+                            <td data-label="Bookings">{{ $staff->bookings_count }}</td>
+                            <td data-label="Confirmed">{{ $staff->confirmed_bookings_count }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -212,7 +212,7 @@
                 <p style="margin: 0; color: var(--muted);">Pick a staff user to see the suppliers, vehicles, and drivers created by that staff member.</p>
             </div>
             @if ($selectedStaffReport)
-                {{-- <span class="badge">{{ $selectedStaffReport->bookings_count }} bookings</span> --}}
+                <span class="badge">{{ $selectedStaffReport->bookings_count }} bookings</span>
             @endif
         </div>
 
@@ -254,14 +254,14 @@
                             <th>Drivers</th>
                             <td>{{ $selectedStaffReport->drivers_count }}</td>
                         </tr>
-                        {{-- <tr>
+                        <tr>
                             <th>Bookings</th>
                             <td>{{ $selectedStaffReport->bookings_count }}</td>
                         </tr>
                         <tr>
                             <th>Confirmed Bookings</th>
                             <td>{{ $selectedStaffReport->confirmed_bookings_count }}</td>
-                        </tr> --}}
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -364,7 +364,7 @@
                 </table>
             </div>
 
-            {{-- <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
+            <div class="table-card" style="margin-top: 18px; box-shadow: none; border: 1px solid var(--border);">
                 <table>
                     <thead>
                         <tr>
@@ -407,7 +407,7 @@
                         @endforelse
                     </tbody>
                 </table>
-            </div> --}}
+            </div>
         @endif
     </div>
 

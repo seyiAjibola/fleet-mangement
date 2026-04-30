@@ -1000,9 +1000,9 @@
                 <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">
                     <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="compliance" /></span><span>Compliance</span></span>
                 </a>
-                {{-- <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
+                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
                     <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="bookings" /></span><span>Bookings</span></span>
-                </a> --}}
+                </a>
                 @if (auth()->user()->isAdmin())
                     <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
                         <span class="nav-link-label"><span class="nav-link-icon"><x-admin.icon name="reports" /></span><span>Reports</span></span>
@@ -1045,7 +1045,7 @@
                     </details>
                 </div>
             </div>
-            {{-- @if (request()->routeIs('admin.users.*'))
+            @if (request()->routeIs('admin.users.*'))
                 <div class="subnav">
                     <a class="subnav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">All Users</a>
                     <a class="subnav-link {{ request()->routeIs('admin.users.create') ? 'active' : '' }}" href="{{ route('admin.users.create') }}">Create User</a>
@@ -1089,7 +1089,7 @@
                         <span class="subnav-pill">Edit Booking</span>
                     @endif
                 </div>
-            @endif --}}
+            @endif
             <div class="admin-main">
                 @hasSection('content')
                     @yield('content')

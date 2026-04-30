@@ -1,12 +1,12 @@
 <section>
     <x-admin.header pageTitle="Dashboard" pageSubTitle="Live overview of operations and capacity." />
 
-    {{-- <div id="bookingStatusData" data-labels='@json($bookingStatusLabels)' data-values='@json($bookingStatusValues)' hidden></div> --}}
+    <div id="bookingStatusData" data-labels='@json($bookingStatusLabels)' data-values='@json($bookingStatusValues)' hidden></div>
     <div id="vehicleStatusData" data-labels='@json($vehicleStatusLabels)' data-values='@json($vehicleStatusValues)' hidden></div>
     <div id="supplierTierData" data-labels='@json($supplierTierLabels)' data-values='@json($supplierTierValues)' hidden></div>
 
     <div class="toolbar">
-        {{-- <div>
+        <div>
             <label for="dashboard-start">Start date</label>
             <input id="dashboard-start" type="date" wire:model="startDate" />
         </div>
@@ -15,7 +15,7 @@
             <input id="dashboard-end" type="date" wire:model="endDate" />
         </div>
         <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
-        <button class="button" type="button" wire:click="exportBookingStatus">Export Booking Status</button> --}}
+        <button class="button" type="button" wire:click="exportBookingStatus">Export Booking Status</button>
         <button class="button secondary" type="button" wire:click="exportVehicleStatus">Export Vehicle Status</button>
     </div>
 
@@ -40,7 +40,7 @@
                     <h3>Drivers</h3>
                     <div class="metric">{{ $driverCount }}</div>
                 </div>
-                {{-- <div class="card">
+                <div class="card">
                     <h3>Bookings</h3>
                     <div class="metric">{{ $bookingCount }}</div>
                 </div>
@@ -59,7 +59,7 @@
                 <div class="card">
                     <h3>Canceled Bookings</h3>
                     <div class="metric">{{ $canceledBookings }}</div>
-                </div> --}}
+                </div>
                 <div class="card">
                     <h3>Available Vehicles</h3>
                     <div class="metric">{{ $availableVehicles }}</div>
@@ -68,12 +68,12 @@
         </div>
 
         <div style="display: grid; gap: 18px;">
-            {{-- <div class="card chart-card" wire:ignore>
+            <div class="card chart-card" wire:ignore>
                 <h3>Bookings by Status</h3>
                 <div class="chart-wrap">
                     <canvas id="bookingStatusChart"></canvas>
                 </div>
-            </div> --}}
+            </div>
             <div class="card chart-card" wire:ignore>
                 <h3>Suppliers by Tier</h3>
                 <div class="chart-wrap">
