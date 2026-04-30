@@ -1045,7 +1045,7 @@
                     </details>
                 </div>
             </div>
-            @if (request()->routeIs('admin.users.*'))
+            {{-- @if (request()->routeIs('admin.users.*'))
                 <div class="subnav">
                     <a class="subnav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">All Users</a>
                     <a class="subnav-link {{ request()->routeIs('admin.users.create') ? 'active' : '' }}" href="{{ route('admin.users.create') }}">Create User</a>
@@ -1089,7 +1089,7 @@
                         <span class="subnav-pill">Edit Booking</span>
                     @endif
                 </div>
-            @endif
+            @endif --}}
             <div class="admin-main">
                 @hasSection('content')
                     @yield('content')

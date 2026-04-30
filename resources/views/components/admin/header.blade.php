@@ -6,14 +6,14 @@
 <div class="mb-4">
     <div class="admin-topbar-inner">
         <div class="admin-topbar-left">
-            <a class="admin-topbar-logo" href="{{ route('dashboard') }}" wire:navigate>
+            {{-- <a class="admin-topbar-logo" href="{{ route('dashboard') }}" wire:navigate>
                 <span class="admin-topbar-logo-mark">Zeno</span>
             </a>
             <nav class="admin-topbar-nav">
                 <a class="admin-topbar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}" wire:navigate>
                     Dashboard
                 </a>
-            </nav>
+            </nav> --}}
             @if ($pageTitle || $pageSubTitle)
                 <div class="admin-topbar-meta">
                     @if ($pageTitle)

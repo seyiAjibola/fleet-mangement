@@ -20,18 +20,20 @@
                 <label for="supplier-number-of-cars">Number of Cars</label>
                 <input id="supplier-number-of-cars" type="number" min="0" wire:model.defer="numberOfCars" placeholder="Cars" />
             </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: end; flex-wrap: wrap; margin-top: 1rem">
             <div>
                 <label for="supplier-location">Location / Address</label>
                 <input id="supplier-location" type="search" wire:model.defer="locationAddress" placeholder="City or address" />
             </div>
-            <div>
+            {{-- <div>
                 <label for="supplier-cac-no">CAC No</label>
                 <input id="supplier-cac-no" type="search" wire:model.defer="cacNo" placeholder="CAC No" />
             </div>
             <div>
                 <label for="supplier-tin">TIN</label>
                 <input id="supplier-tin" type="search" wire:model.defer="tin" placeholder="TIN" />
-            </div>
+            </div> --}}
             <div>
                 <label for="supplier-status">Status</label>
                 <select id="supplier-status" wire:model.defer="status">
