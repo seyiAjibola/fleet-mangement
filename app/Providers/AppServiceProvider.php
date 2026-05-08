@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Support\Compliance\ComplianceEntityMap;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -57,6 +58,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::morphMap(ComplianceEntityMap::morphMap());
+        Paginator::defaultView('vendor.pagination.admin');
+        Paginator::defaultSimpleView('vendor.pagination.admin-simple');
 
         if ($this->app->environment('production')) {
             URL::forceScheme('https');

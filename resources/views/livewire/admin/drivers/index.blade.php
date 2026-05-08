@@ -1,12 +1,14 @@
 <section>
-    <x-admin.header pageTitle="Drivers" pageSubTitle="Roster management and licensing status." />
+    <x-admin.header pageTitle="Drivers" pageSubTitle="Roster management and licensing status.">
+        <a class="button" href="{{ route('admin.drivers.create') }}">Add New Driver</a>
+    </x-admin.header>
     <x-admin.toast />
 
-    <div class="toolbar" style="justify-content: space-between">
+    <div class="toolbar">
         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center">
             <div>
                 <label for="driver-search">Search</label>
-                <input id="driver-search" type="search" wire:model.defer="search" placeholder="Name, phone, license" />
+                <input id="driver-search" type="search" wire:model.defer="search" placeholder="Name or phone" />
             </div>
             <div>
                 <label for="driver-status">Status</label>
@@ -18,7 +20,6 @@
             </div>
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
         </div>
-        <a class="button" href="{{ route('admin.drivers.create') }}">Add New Driver</a>
     </div>
 
     <div class="table-card">
@@ -27,7 +28,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Phone</th>
-                    <th>License</th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -37,7 +37,6 @@
                     <tr>
                         <td data-label="Name">{{ $driver->driver_name }}</td>
                         <td data-label="Phone">{{ $driver->phone_number }}</td>
-                        <td data-label="License">{{ $driver->license_number }}</td>
                         <td data-label="Status"><span class="badge" data-status="{{ $driver->status }}">{{ $driver->status }}</span></td>
                         <td>
                             <div class="table-actions">
@@ -60,7 +59,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5">No drivers found.</td>
+                        <td colspan="4">No drivers found.</td>
                     </tr>
                 @endforelse
             </tbody>

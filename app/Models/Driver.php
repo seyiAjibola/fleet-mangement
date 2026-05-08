@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\OwnedByUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Driver extends Model
 {
@@ -24,6 +25,15 @@ class Driver extends Model
         'professional_experience',
         'status',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Driver $driver): void {
+            if (blank($driver->license_number)) {
+                $driver->license_number = 'compliance-' . Str::uuid();
+            }
+        });
+    }
 
     public function supplier(): BelongsTo
     {

@@ -1,5 +1,7 @@
 <section>
-    <x-admin.header pageTitle="Vehicles" pageSubTitle="Fleet inventory, capacity, and availability." />
+    <x-admin.header pageTitle="Vehicles" pageSubTitle="Fleet inventory, capacity, and availability.">
+        <a class="button" href="{{ route('admin.vehicles.create') }}">Add New Vehicle</a>
+    </x-admin.header>
     <x-admin.toast />
 
     <div class="toolbar" style="justify-content: space-between">
@@ -65,10 +67,6 @@
             </div>
         </div>
     </div>
-    <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end"> 
-        <a class="button" href="{{ route('admin.vehicles.create') }}">Add New Vehicle</a>
-    </div>
-
     <div class="table-card">
         <table>
             <thead>

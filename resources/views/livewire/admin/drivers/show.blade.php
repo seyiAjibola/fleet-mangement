@@ -1,11 +1,11 @@
 <section>
-    <x-admin.header pageTitle="Driver Details" pageSubTitle="Full driver profile, assignment, and licensing information." />
+    <x-admin.header pageTitle="Driver Details" pageSubTitle="Full driver profile, assignment, and compliance information." />
 
     <div class="card" style="display: grid; gap: 18px;">
         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: start; flex-wrap: wrap;">
             <div>
                 <h3 style="margin: 0;">{{ $driver->driver_name }}</h3>
-                <p style="margin: 6px 0 0; color: var(--muted);">{{ $driver->license_number }}</p>
+                <p style="margin: 6px 0 0; color: var(--muted);">{{ $driver->phone_number }}</p>
             </div>
             <div class="table-actions">
                 <a class="button secondary icon-button icon-edit" href="{{ route('admin.drivers.edit', $driver) }}" aria-label="Edit driver" title="Edit driver"><x-admin.icon name="edit" /></a>
@@ -47,10 +47,6 @@
                     <tr>
                         <th>Phone Number</th>
                         <td>{{ $driver->phone_number }}</td>
-                    </tr>
-                    <tr>
-                        <th>License Number</th>
-                        <td>{{ $driver->license_number }}</td>
                     </tr>
                     <tr>
                         <th>Years Experience</th>

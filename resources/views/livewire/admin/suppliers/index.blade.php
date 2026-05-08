@@ -1,5 +1,7 @@
 <section>
-    <x-admin.header pageTitle="Suppliers" pageSubTitle="Track supplier profiles and performance." />
+    <x-admin.header pageTitle="Suppliers" pageSubTitle="Track supplier profiles and performance.">
+        <a class="button primary" href="{{ route('admin.suppliers.create') }}">Add New Supplier</a>
+    </x-admin.header>
     <x-admin.toast />
 
     <div class="toolbar">
@@ -47,9 +49,6 @@
                 <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
             </div>    
         </div>
-    </div>
-    <div style="margin-bottom: 1rem; display: flex; justify-content: flex-end">  
-        <a class="button primary" href="{{ route('admin.suppliers.create') }}">Add New Supplier</a>
     </div>
     <div class="table-card">
         <table>

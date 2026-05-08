@@ -17,7 +17,6 @@ class Create extends Component
     public int $vehicle_id = 0;
     public string $driver_name = '';
     public string $phone_number = '';
-    public string $license_number = '';
     public int $years_experience = 0;
     public string $languages = '';
     public ?string $professional_experience = null;
@@ -30,7 +29,6 @@ class Create extends Component
             'vehicle_id' => ['required', 'integer', 'exists:vehicles,vehicle_id'],
             'driver_name' => ['required', 'string', 'max:255'],
             'phone_number' => ['required', 'string', 'max:255'],
-            'license_number' => ['required', 'string', 'max:255', 'unique:drivers,license_number'],
             'years_experience' => ['required', 'integer', 'min:0'],
             'languages' => ['required', 'string', 'max:255'],
             'professional_experience' => ['nullable', 'string'],

@@ -1,8 +1,10 @@
 <section>
-    <x-admin.header pageTitle="Customer Bookings" pageSubTitle="Track pickup windows and fulfillment status." />
+    <x-admin.header pageTitle="Customer Bookings" pageSubTitle="Track pickup windows and fulfillment status.">
+        <a class="button" href="{{ route('admin.bookings.create') }}">Add New Booking</a>
+    </x-admin.header>
     <x-admin.toast />
 
-    <div class="toolbar" style="justify-content: end">
+    <div class="toolbar">
         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: center">
             <div>
                 <label for="booking-search">Search</label>
@@ -31,7 +33,6 @@
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
             <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
         </div>
-        <a class="button" href="{{ route('admin.bookings.create') }}">Add New Booking</a>
     </div>
 
     <div class="table-card">

@@ -37,12 +37,6 @@
         </div>
 
         <div class="form-row">
-            <label for="license_number">License Number</label>
-            <input id="license_number" type="text" wire:model.defer="license_number" />
-            @error('license_number') <p class="text-red-500">{{ $message }}</p> @enderror
-        </div>
-
-        <div class="form-row">
             <label for="years_experience">Years Experience</label>
             <input id="years_experience" type="number" wire:model.defer="years_experience" />
             @error('years_experience') <p class="text-red-500">{{ $message }}</p> @enderror

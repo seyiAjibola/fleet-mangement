@@ -79,8 +79,7 @@ class Index extends Component
                 ->when($this->search !== '', function ($query) {
                     $query->where(function ($inner) {
                         $inner->where('driver_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('phone_number', 'like', '%' . $this->search . '%')
-                            ->orWhere('license_number', 'like', '%' . $this->search . '%');
+                            ->orWhere('phone_number', 'like', '%' . $this->search . '%');
                     });
                 })
                 ->when($this->status !== '', function ($query) {

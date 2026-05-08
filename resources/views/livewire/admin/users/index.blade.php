@@ -1,8 +1,10 @@
 <section>
-    <x-admin.header pageTitle="Users" pageSubTitle="Manage platform access and profiles." />
+    <x-admin.header pageTitle="Users" pageSubTitle="Manage platform access and profiles.">
+        <a class="button" href="{{ route('admin.users.create') }}">Add New User</a>
+    </x-admin.header>
     <x-admin.toast />
 
-    <div class="toolbar" style="justify-content: space-between">
+    <div class="toolbar">
         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: end; flex-wrap: wrap">
             <div>
                 <label for="user-name">User Name</label>
@@ -15,7 +17,6 @@
             <button class="button secondary" type="button" wire:click="applyFilters">Filter</button>
             <button class="button secondary" type="button" wire:click="resetFilters">Reset</button>
         </div>
-        <a class="button" href="{{ route('admin.users.create') }}">Add New User</a>
     </div>
 
     <div class="table-card">

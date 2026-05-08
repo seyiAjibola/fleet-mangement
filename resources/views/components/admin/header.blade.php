@@ -26,6 +26,12 @@
             @endif
         </div>
 
+        @if (trim((string) $slot) !== '')
+            <div class="admin-topbar-right">
+                {{ $slot }}
+            </div>
+        @endif
+
         {{-- <div class="admin-topbar-right">
             <details class="admin-topbar-menu">
                 <summary class="admin-topbar-trigger">
