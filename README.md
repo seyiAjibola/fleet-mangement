@@ -1,3 +1,18 @@
+## ⚠️ Licence & Commercial Use
+
+This project is available for **personal and evaluation 
+use only**. Commercial use requires a separate licence.
+
+If you're a fleet operator or business interested in 
+using this system:
+
+📧 **info2mee.seyi@gmail.com**  
+💼 **linkedin.com/in/seyiojo**
+
+> This software is being developed into a hosted SaaS 
+> platform for Nigerian fleet operators. 
+> [Get notified when we launch](#)
+
 # Fleet managemment and Compliance Admin
 
 A Laravel and Livewire admin application for managing a car hire operation.
